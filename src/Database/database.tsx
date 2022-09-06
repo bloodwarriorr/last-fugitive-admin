@@ -118,3 +118,19 @@ export const signIn = async (admin:{email:string,password:string}) => {
       throw new Error("Network Error!");
     }
   };
+  export const getAllLevels= async (uid:string) => {
+    const requestOptions = {
+      method: "get",
+      headers: { "Content-type": "application/json; charset=UTF-8","uid":uid },
+    };
+    try {
+      const data = await fetch(process.env.REACT_APP_SERVER + "/levels", requestOptions);
+      if (data.ok) {
+        const json = await data.json();
+        return json;
+      }
+      throw new Error("Error while get levels");
+    } catch {
+      throw new Error("Network Error!");
+    }
+  };
