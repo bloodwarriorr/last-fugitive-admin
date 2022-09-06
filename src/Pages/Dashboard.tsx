@@ -1,12 +1,13 @@
+import React from 'react'
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Container, Divider, Typography } from "@mui/material";
-import PopularLevelsChart from "./PopularLevelsChart";
+import PopularLevelsChart from "../Components/PopularLevelsChart";
 
-type Props = {};
+type Props = {}
 
-const Stats = (props: Props) => {
+const Dashboard = (props: Props) => {
   return (
     <Container maxWidth={"xl"}>
 
@@ -85,7 +86,7 @@ const Stats = (props: Props) => {
         
       </Grid>
     </Container>
-  );
-};
+  )
+}
 
-export default Stats;
+export default Dashboard

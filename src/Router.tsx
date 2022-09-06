@@ -1,11 +1,40 @@
-import React from 'react'
-import { BrowserRouter } from "react-router-dom";
-type Props = {}
+import React from "react";
+import Login from "./Pages/Login";
+import Dashboard from "./Pages/Dashboard";
+import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./Context/AdminContext";
+import RequireAuth from "./Components/Utils/RequireAuth";
+import Navbar from "./Components/NavBar";
+import Levels from "./Pages/Levels";
 
-const Router = (props: Props) => {
+type Props = {};
+
+const Router: React.FC<Props> = () => {
   return (
-    <div>Router</div>
-  )
-}
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <RequireAuth>
+              <Navbar />
+              <Dashboard />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/levels"
+          element={
+            <RequireAuth>
+              <Navbar />
+              <Levels />
+            </RequireAuth>
+          }
+        />
+      </Routes>
+    </AuthProvider>
+  );
+};
 
-export default Router
+export default Router;

@@ -12,22 +12,24 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Stats from "../Components/Stats";
+import Stats from "./Stats";
+import { useAuth } from "../Context/AdminContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface Props {
   window?: () => Window;
 }
 
 const drawerWidth = 240;
-const navItems = ["Stats", "Levels", "Logout"];
 
-export default function DrawerAppBar(props: Props) {
+export default function Navbar(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const auth = useAuth();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const navigate = useNavigate();
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -36,13 +38,26 @@ export default function DrawerAppBar(props: Props) {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }}
+          onClick={()=>navigate("/dashboard")}>
+            <ListItemText primary="Stats" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }}
+          onClick={()=>navigate("/Levels")}>
+            <ListItemText primary="Levels" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: "center" }}
+          onClick={() => auth?.logout()}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -72,11 +87,15 @@ export default function DrawerAppBar(props: Props) {
               The Last Fugitive
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {navItems.map((item) => (
-                <Button key={item} sx={{ color: "#fff" }}>
-                  {item}
-                </Button>
-              ))}
+              <Button sx={{ color: "#fff" }} onClick={()=>navigate("/dashboard")}>
+                Stats
+              </Button>
+              <Button sx={{ color: "#fff" }} onClick={()=>navigate("/levels")}>
+                Levels
+              </Button>
+              <Button sx={{ color: "#fff" }} onClick={() => auth?.logout()}>
+                Logout
+              </Button>
             </Box>
           </Toolbar>
         </AppBar>
@@ -105,7 +124,6 @@ export default function DrawerAppBar(props: Props) {
           <Toolbar />
         </Box>
       </Box>
-      <Stats />
     </div>
   );
 }
