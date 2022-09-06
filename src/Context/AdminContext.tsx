@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signIn } from "../Database/database";
 import { AdminContextType, AdminDetailsType } from "../Types/Types";
 import { useUtilsContext } from "./UtilsContext";
 
@@ -16,18 +17,19 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   );
   const navigate = useNavigate();
 
-  const login = (details: AdminDetailsType) => {
+  const login = async (details: AdminDetailsType) => {
     setIsLoader(true);
-    setTimeout(() => {
-      if (details.email === "admin") {
-        setToken("admin123");
-        sessionStorage.setItem("tlf@id", "admin123");
-        navigate("/Dashboard");
-      } else {
-        setAlert({isOpen:true,type:'error'})
-      }
-      setIsLoader(false);
-    }, 2000);
+    let uid;
+    try {
+      uid = await signIn(details);
+      setToken(uid);
+      sessionStorage.setItem("tlf@id", uid);
+      navigate("/Dashboard");
+    } catch (err) {
+      setAlert({isOpen:true,type:'error'})
+    }
+ 
+    setIsLoader(false);
   };
 
   const logout = () => {

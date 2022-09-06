@@ -51,7 +51,7 @@ const Stats = (props: Props) => {
         <Grid item xs={12} md={6}>
         <Paper elevation={5}>
             <Box sx={{}} p={3} minHeight={300}>
-            <PopularLevelsChart/>
+           
 
             </Box>
           </Paper>
