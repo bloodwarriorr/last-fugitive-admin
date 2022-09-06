@@ -1,3 +1,5 @@
+import { LevelType } from "../Types/Types";
+
 export const signIn = async (admin:{email:string,password:string}) => {
     const requestOptions = {
       method: "post",
@@ -134,3 +136,23 @@ export const signIn = async (admin:{email:string,password:string}) => {
       throw new Error("Network Error!");
     }
   };
+
+
+  export const InsertLevel= async (uid:string,level:LevelType) => {
+    const requestOptions = {
+      method: "post",
+      headers: { "Content-type": "application/json; charset=UTF-8","uid":uid },
+      body: JSON.stringify(level)
+    };
+    try {
+      const data = await fetch(process.env.REACT_APP_SERVER + "/levels/add", requestOptions);
+      if (data.ok) {
+        const json = await data.json();
+        return json;
+      }
+      throw new Error("Error while get levels");
+    } catch {
+      throw new Error("Network Error!");
+    }
+  };
+
