@@ -34,7 +34,7 @@ const Login: React.FC<Props> = () => {
     <Grid
       container
       spacing={2}
-      height={"100vh"}
+      height={"calc(100vh - 100px)"}
       justifyContent="center"
       alignItems={"center"}
     >

@@ -9,9 +9,9 @@ import UtilsContextProvider from "./Context/UtilsContext";
 function App() {
   return (
     <Container maxWidth="xl">
-      <UtilsContextProvider>
+      {/* <UtilsContextProvider> */}
         <Router />
-      </UtilsContextProvider>
+      {/* </UtilsContextProvider> */}
     </Container>
   );
 }

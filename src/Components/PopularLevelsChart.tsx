@@ -1,87 +1,86 @@
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Skeleton, Typography } from "@mui/material";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
+  PieChart,
+  Pie,
+  Sector,
+  Cell,
   ResponsiveContainer,
+  Legend,
+  Label,
 } from "recharts";
 
-// const data = [
-//   {
-//     name: "Level 1",
-//     pv: 2400,
-
-//   },
-//   {
-//     name: "Level 2",
-//     pv: 1398,
-//   },
-//   {
-//     name: "Level 3",
-//     pv: 9800,
-//   },
-//   {
-//     name: "Level 4",
-//     pv: 3908,
-//   },
-//   {
-//     name: "Page E",
-//     uv: 1890,
-//     pv: 4800,
-//     amt: 2181,
-//   },
-//   {
-//     name: "Page F",
-//     pv: 3800,
-
-//   },
-//   {
-//     name: "Level 5",
-//     uv: 3490,
-//     pv: 4300,
-//     amt: 2100,
-//   },
-// ];
-
 type Props = {
-data:{_id:number,Value:number}[]
+  data: { _id: number; Value: number }[];
 };
 
-const PopularLevelsChart:React.FC<Props> = ({data}) => {
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  index,
+}: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
+const PopularLevelsChart: React.FC<Props> = ({ data }) => {
   return (
     <>
-    <Typography variant="h6">Popular Levels</Typography>
-    <Box marginBottom={5} marginTop={1}>
-        <Divider component="div"  variant="fullWidth" />
+      <Typography variant="h6">Top 5 Popular Levels</Typography>
+      <Box marginBottom={5} marginTop={1}>
+        <Divider component="div" variant="fullWidth" />
       </Box>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          width={500}
+        {data ? (
+          <PieChart 
+          width={500} 
           height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-          barSize={20}
-        >
-          <XAxis
-            dataKey={"_id"}
-            scale="point"
-            padding={{ left: 10, right: 10 }}
+          >
+            <Legend layout="horizontal" verticalAlign="bottom" align="center"/>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              nameKey={`_id`}
+              label={renderCustomizedLabel}
+              outerRadius={'97%'}
+              fill="#8884d8"
+              dataKey="Value"
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        ) : (
+          <Skeleton
+            animation={"wave"}
+            height={300}
+            sx={{ transform: "none" }}
           />
-          <YAxis />
-          <Tooltip />
-          <Legend  />
-          <CartesianGrid strokeDasharray="3 3" />
-          <Bar name="Popularity" dataKey="Value" fill="#8884d8" background={{ fill: "#eee" }} />
-        </BarChart>
+        )}
       </ResponsiveContainer>
     </>
   );

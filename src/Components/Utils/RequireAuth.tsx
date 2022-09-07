@@ -9,6 +9,7 @@ type Props = {
 
 const RequireAuth:React.FC<Props> = ({children}) => {
   const auth = useAuth();
+  console.count('auth')
   return auth?.token ? (
     children
   ) : (

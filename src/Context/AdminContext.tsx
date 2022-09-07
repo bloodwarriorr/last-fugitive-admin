@@ -11,14 +11,14 @@ type Props = {
 };
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
-  const { setIsLoader, setAlert } = useUtilsContext();
+  // const { setIsLoader, setAlert } = useUtilsContext();
   const [token, setToken] = useState<string | null>(
     sessionStorage.getItem("tlf@id")
   );
   const navigate = useNavigate();
 
   const login = async (details: AdminDetailsType) => {
-    setIsLoader(true);
+    // setIsLoader(true);
     let uid;
     try {
       uid = await signIn(details);
@@ -26,10 +26,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       sessionStorage.setItem("tlf@id", uid);
       navigate("/Dashboard");
     } catch (err) {
-      setAlert({isOpen:true,type:'error'})
+      // setAlert({isOpen:true,type:'error'})
     }
  
-    setIsLoader(false);
+    // setIsLoader(false);
   };
 
   const logout = () => {
@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     setToken(null);
     navigate("/");
   };
+  console.count('admin context')
   return (
     <authContext.Provider
       value={{

@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stats from "./Stats";
 import { useAuth } from "../Context/AdminContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 interface Props {
   window?: () => Window;
@@ -30,7 +30,8 @@ export default function Navbar(props: Props) {
     setMobileOpen(!mobileOpen);
   };
   const navigate = useNavigate();
-
+  const location = useLocation();
+  console.count("navbar");
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -39,22 +40,28 @@ export default function Navbar(props: Props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}
-          onClick={()=>navigate("/dashboard")}>
+          <ListItemButton
+            sx={{ textAlign: "center" }}
+            onClick={() => navigate("/dashboard")}
+          >
             <ListItemText primary="Stats" />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}
-          onClick={()=>navigate("/Levels")}>
+          <ListItemButton
+            sx={{ textAlign: "center" }}
+            onClick={() => navigate("/Levels")}
+          >
             <ListItemText primary="Levels" />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}
-          onClick={() => auth?.logout()}>
+          <ListItemButton
+            sx={{ textAlign: "center" }}
+            onClick={() => auth?.logout()}
+          >
             <ListItemText primary="Logout" />
           </ListItemButton>
         </ListItem>
@@ -70,33 +77,43 @@ export default function Navbar(props: Props) {
       <Box sx={{ display: "flex" }}>
         <AppBar component="nav">
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
+            {location.pathname !== "/" && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ mr: 2, display: { sm: "none" } }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <Typography
               variant="h6"
               component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+              sx={{ flexGrow: 1 }}
             >
               The Last Fugitive
             </Typography>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <Button sx={{ color: "#fff" }} onClick={()=>navigate("/dashboard")}>
-                Stats
-              </Button>
-              <Button sx={{ color: "#fff" }} onClick={()=>navigate("/levels")}>
-                Levels
-              </Button>
-              <Button sx={{ color: "#fff" }} onClick={() => auth?.logout()}>
-                Logout
-              </Button>
-            </Box>
+            {location.pathname !== "/" && (
+              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                <Button
+                  sx={{ color: "#fff" }}
+                  onClick={() => navigate("/dashboard")}
+                >
+                  Stats
+                </Button>
+                <Button
+                  sx={{ color: "#fff" }}
+                  onClick={() => navigate("/levels")}
+                >
+                  Levels
+                </Button>
+                <Button sx={{ color: "#fff" }} onClick={() => auth?.logout()}>
+                  Logout
+                </Button>
+              </Box>
+            )}
           </Toolbar>
         </AppBar>
 
@@ -120,6 +137,7 @@ export default function Navbar(props: Props) {
             {drawer}
           </Drawer>
         </Box>
+
         <Box component="main" sx={{ p: 3 }}>
           <Toolbar />
         </Box>

@@ -8,6 +8,7 @@ type Props = {
   children?:React.ReactNode
 }
 const UtilsContextProvider: React.FC<Props> = ({ children }) => {
+  console.count('utils context')
   const [alertSettings, setAlert] = useState<AlertType>({
     isOpen: false,
     type: "error",
