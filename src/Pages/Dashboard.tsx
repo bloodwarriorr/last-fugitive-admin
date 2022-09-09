@@ -175,14 +175,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
           </Paper>
         </Grid>
       </Grid>
-      <Box marginBottom={5} marginTop={5}>
-        <Divider component="div" variant="fullWidth" />
-      </Box>
-      <Box paddingBottom={3}>
-        <Typography textAlign={"center"} variant="subtitle2">
-          The Last Fugitive © made by K.O Games
-        </Typography>
-      </Box>
+
       <SpeedDail refreshData={setRefreshKey} />
     </Container>
   );

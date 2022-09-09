@@ -1,0 +1,469 @@
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Paper,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import LevelArrayInput from "../Components/Levels/LevelArrayInput";
+import LevelSelect from "../Components/Levels/LevelSelect";
+import { getAllLevels } from "../Database/database";
+import { useAuth } from "../Context/AdminContext";
+import { emptyLevel, EnimiesType, LevelType, PlayerType } from "../Types/Types";
+import tile from "../Assets/tile.png";
+import collider from "../Assets/colider.png";
+import playerImg from "../Assets/playerImg.png";
+import enemy0 from "../Assets/enemy0.png";
+import enemy1 from "../Assets/enemy1.png";
+import enemy2 from "../Assets/enemy2.png";
+import LevelNumberInput from "../Components/Levels/LevelNumberInput";
+type Props = {};
+
+interface PlayerStateType {
+  start_position: string;
+  startDirection: string;
+}
+const Levels = (props: Props) => {
+  const auth = useAuth();
+  const [levelObject, setLevelObject] = useState<LevelType>(emptyLevel);
+  const [allLevels, setAllLevels] = useState();
+  const [levelCode, setLevelCode] = useState();
+  const [levelSize, setLevelSize] = useState({ x: 8, y: 4 });
+  const [diffculty, setDiffculty] = useState(1);
+  const [stepCap, setStepCap] = useState([
+    { code: 3, step: '10' },
+    { code: 2, step: '15' },
+  ]);
+  const [player, setPlayer] = useState<PlayerStateType>({
+    start_position: "",
+    startDirection: "RIGHT",
+  });
+  const [numberOfEnemies, setNumberOfEnemies] = useState(1);
+  const [enemies, setEnemies] = useState<EnimiesType[]>([
+    { code: 0, start_position: [], startDirection: "RIGHT" },
+  ]);
+  const [endPoint, setEndPoint] = useState();
+  const [gameMap, setGameMap] = useState([
+    ...Array(4).fill([...Array(8).fill(0)]),
+  ]);
+
+  useEffect(() => {
+    const getLevels = async () => {
+      const levels = await getAllLevels(auth?.token!);
+      setAllLevels(levels);
+      setLevelCode(levels.length + 1);
+    };
+    getLevels();
+  }, []);
+
+  useEffect(() => {
+    const newMap = JSON.parse(JSON.stringify(gameMap));
+    const rowDiff = levelSize.y - gameMap.length;
+    const cellDiff = levelSize.x - gameMap[0].length;
+    if (rowDiff > 0 || cellDiff > 0) {
+      for (let i = 0; i < rowDiff; i++) {
+        newMap.push([...Array(levelSize.x).fill(0)]);
+      }
+      for (let row of newMap) {
+        for (let i = 0; i < cellDiff; i++) {
+          row.push(0);
+        }
+      }
+    } else if (rowDiff < 0 || cellDiff < 0) {
+      for (let i = 0; i < Math.abs(rowDiff); i++) {
+        newMap.pop();
+      }
+      for (let row of newMap) {
+        for (let i = 0; i < Math.abs(cellDiff); i++) {
+          row.pop();
+        }
+      }
+    }
+    setGameMap(newMap);
+  }, [levelSize]);
+
+  useEffect(() => {
+    const enemiesDiff = numberOfEnemies - enemies.length;
+    if (enemiesDiff > 0) {
+      for (let i = 0; i < enemiesDiff; i++) {
+        enemies.push({
+          code: i + 1,
+          start_position: [5, 1],
+          startDirection: "RIGHT",
+        });
+      }
+    } else if (enemiesDiff < 0) {
+      for (let i = 0; i < Math.abs(enemiesDiff); i++) {
+        enemies.pop();
+      }
+    }
+  }, [numberOfEnemies]);
+
+  // const handlePlayerError = (): boolean | undefined => {
+  //   const y = player[0];
+  //   const x = player[1];
+  //   return !validateSprites(y,x);
+  // };
+  // const handleEnemiesError = (): boolean | undefined => {
+  //   const pos = JSON.parse(
+  //     JSON.stringify([enemies]).replaceAll('"', " ").toString()
+  //   );
+  //   return pos.some((p: any) => {
+  //     const y = parseInt(p[0]);
+  //     const x = parseInt(p[1]);
+  //     return y < 0 || x < 0 || y > levelSize.y || x > levelSize.x;
+  //   });
+  // };
+  const handleStartChange = (val: string, isDir = false) => {
+    if (isDir) {
+      setPlayer({ ...player, startDirection: val });
+    } else {
+      // const pos = val.split(",");
+      // if (pos[0] && pos[1] && validateSprites(pos[0], pos[1])) {
+      setPlayer({
+        ...player,
+        start_position: val,
+      });
+    }
+  };
+
+  // const handleEndChange = (val: string) => {
+  //   const pos = val.split(",");
+  //   if (pos[0] && pos[1] && validateSprites(pos[0], pos[1])) {
+  //     const y = parseInt(pos[0]);
+  //     const x = parseInt(pos[1]);
+  //     setEndPoint([y, x]);
+  //     gameMap[y][x] = -1;
+  //   }
+  // };
+  const handleStepCapChange = (val: string, elementId: string) => {
+    if (val) {
+      const id = parseInt(elementId[1]);
+      const cap = stepCap;
+      cap[id] = { ...cap[id], step: parseInt(val) };
+      setStepCap(cap);
+    }
+  };
+  const handleEnemiesChange = (
+    val: string,
+    elementId: string,
+    isDir = false
+  ) => {
+    const id = parseInt(elementId[1]);
+    const updated = enemies;
+    if (isDir) {
+      console.log(val);
+      updated[id].startDirection = val;
+      console.log(updated[id]);
+      setEnemies([...updated]);
+    } else {
+      const pos = val.split(",");
+      if (pos[0] && pos[1] && validateSprites(pos[0], pos[1])) {
+        updated[id].start_position = [parseInt(pos[0]), parseInt(pos[1])];
+        setEnemies([...updated]);
+      }
+    }
+  };
+  // const positionsError = !!!player.start_position
+
+  const validateSprites = (y: number | string, x: number | string) => {
+    return y > 0 || x > 0 || y < levelSize.y || x < levelSize.x;
+  };
+  return (
+    <Box>
+      <div
+        style={{
+          height: "calc(100vh - 231px)",
+          display: "grid",
+          gridTemplateRows: "2fr auto 5fr auto 2fr auto",
+          alignItems: "center",
+          gap: "8px",
+        }}
+      >
+        <Box>
+          <Typography>Game Settings</Typography>
+          <Paper>
+            <Box
+              p={1}
+              display={"flex"}
+              alignItems="center"
+              flexWrap={"wrap"}
+              justifyContent={"space-around"}
+            >
+              <Box>
+                <Typography variant="subtitle2">Level Code</Typography>
+                <Typography variant="h6">{levelCode}</Typography>
+              </Box>
+              <LevelSelect
+                name={"Rows"}
+                value={levelSize.y}
+                options={[4, 5, 6]}
+                changeHandler={(val) =>
+                  setLevelSize({ ...levelSize, y: val as number })
+                }
+              />
+              <LevelSelect
+                name={"Cols"}
+                value={levelSize.x}
+                options={[8, 9, 10, 11, 12, 13]}
+                changeHandler={(val) =>
+                  setLevelSize({ ...levelSize, x: val as number })
+                }
+              />
+              <LevelArrayInput
+                name={"Start Position"}
+                label={"y,x"}
+                value={player.start_position}
+                levelSize={levelSize}
+                changeHandler={(val) => handleStartChange(val)}
+                setLevelObject={(val:number[]) =>
+                  setLevelObject({
+                    ...levelObject,
+                    player: { ...levelObject?.player, start_position: val },
+                  })
+                }
+              />
+              <LevelSelect
+                name={"Start Direction"}
+                value={player.startDirection}
+                options={["LEFT", "RIGHT"]}
+                changeHandler={(val) => handleStartChange(val as string, true)}
+              />
+              <LevelArrayInput
+                name={"End"}
+                label={"y,x"}
+                value={endPoint}
+                levelSize={levelSize}
+                // changeHandler={(val) => handleEndChange(val)}
+                changeHandler={(val) => setEndPoint(val)}
+                setLevelObject={(val:number[]) =>
+                  setLevelObject({
+                    ...levelObject,
+                    end_point:val
+                  })
+                }
+              />
+              <LevelSelect
+                name={"Enemies"}
+                value={numberOfEnemies}
+                options={[1, 2, 3]}
+                changeHandler={(val) => setNumberOfEnemies(val as number)}
+              />
+              <LevelSelect
+                name={"Difficulty"}
+                value={diffculty}
+                options={[1, 2, 3]}
+                changeHandler={(val) => setDiffculty(val as number)}
+              />
+              {/* <LevelNumberInput
+                id={"s3"}
+                name={"★ ★ ★"}
+                label={"10"}
+                changeHandler={(val, id) => handleStepCapChange(val, id!)}
+                value={stepCap[0].step}
+                setLevelObject={(val)=>{
+                  setLevelObject(parseInt(val))
+                }}
+              />
+              <LevelNumberInput
+                id={"s2"}
+                name={"★ ★"}
+                label={"15"}
+                changeHandler={(val, id) => handleStepCapChange(val, id!)}
+              /> */}
+            </Box>
+          </Paper>
+        </Box>
+        <Divider />
+        <Box>
+          {gameMap.map((row, index) => {
+            return (
+              <MapRow
+                key={index}
+                index={index}
+                row={row}
+                player={player}
+                enemies={enemies}
+                end={endPoint}
+                map={gameMap}
+                setMap={setGameMap}
+              />
+            );
+          })}
+        </Box>
+        <Divider />
+
+        <Box>
+          <Typography>Enemies Settings</Typography>
+          <Paper>
+            <Box
+              p={1}
+              display={"flex"}
+              alignItems="center"
+              flexWrap={"wrap"}
+              justifyContent={"space-around"}
+            >
+              <EnemiesSettings
+                numberOfEnemies={numberOfEnemies}
+                enemies={enemies}
+                handleEnemiesChange={(
+                  val: string,
+                  id: string,
+                  isDir: boolean | undefined
+                ) => handleEnemiesChange(val, id, isDir)}
+              />
+            </Box>
+          </Paper>
+        </Box>
+        <Box textAlign={"center"} marginTop={1}>
+          <Button variant="contained">Create Level</Button>
+        </Box>
+      </div>
+    </Box>
+  );
+};
+
+export default Levels;
+
+export const MapRow = (props: any) => {
+  const rows = props.row.map((col: any, index: any) => {
+    return (
+      <MapBox
+        setMap={props.setMap}
+        map={props.map}
+        player={props.player}
+        enemies={props.enemies}
+        end={props.end}
+        col={col}
+        cellIndex={index}
+        rowIndex={props.index}
+        key={index}
+      />
+    );
+  });
+  return <Box sx={{ display: "flex", justifyContent: "center" }}>{rows}</Box>;
+};
+
+export const MapBox = (props: any) => {
+  const { rowIndex, cellIndex, player, enemies, end, map, setMap } = props;
+  const [isCollider, setIsCollider] = useState(false);
+  const enemyIndex = enemies.findIndex(
+    (pos: any) =>
+      pos.start_position[0] === rowIndex && pos.start_position[1] === cellIndex
+  );
+  const enemiesImages = [enemy0, enemy1, enemy2];
+  const isPlayer =
+    player.start_position[0] === rowIndex &&
+    player.start_position[1] === cellIndex;
+  const background = `url(${tile})`;
+  const isExit = end[0] === rowIndex && end[1] === cellIndex;
+
+  const handleCellClick = () => {
+    const collider = !isCollider;
+    const newMap = JSON.parse(JSON.stringify(map));
+    newMap[rowIndex][cellIndex] = collider ? 1 : 0;
+    setIsCollider(collider);
+    setMap(newMap);
+  };
+  return (
+    <div
+      style={{
+        background: background,
+        width: "6.5vmin",
+        height: "6.5vmin",
+        border: "1px solid black",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+        cursor: "pointer",
+      }}
+      onClick={handleCellClick}
+    >
+      {!isCollider && !isPlayer && !isExit && enemyIndex === -1 && (
+        <span>
+          {rowIndex},{cellIndex}
+        </span>
+      )}
+      {isCollider && <img width={"80%"} src={collider} alt="collider" />}
+      {isPlayer && (
+        <img
+          width={"100%"}
+          src={playerImg}
+          alt="player"
+          style={{
+            transform:
+              player.startDirection === "LEFT" ? "scaleX(-1)" : "scaleX(1)",
+          }}
+        />
+      )}
+      {enemyIndex !== -1 && (
+        <img
+          width={"100%"}
+          src={enemiesImages[enemyIndex]}
+          alt="player"
+          style={{
+            transform:
+              enemies[enemyIndex].startDirection === "LEFT"
+                ? "scaleX(-1)"
+                : "scaleX(1)",
+          }}
+        />
+      )}
+      {isExit && (
+        <Box
+          width="100%"
+          height={"100%"}
+          position="absolute"
+          boxShadow={"inset 2px 2px 10px 3px purple"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          EXIT
+        </Box>
+      )}
+    </div>
+  );
+};
+const EnemiesSettings = ({
+  numberOfEnemies,
+  enemies,
+  handleEnemiesChange,
+}: any) => {
+  return (
+    <>
+      {[...Array(3)].map((el, index) => {
+        return (
+          <Box key={index} display={"flex"} alignItems="center">
+            <Divider orientation="vertical" flexItem>
+              Enemy {index + 1}
+            </Divider>
+            <Box>
+              <LevelArrayInput
+                id={`e${index}`}
+                name={"Position"}
+                label={"y,x"}
+                changeHandler={(val, id) => handleEnemiesChange(val, id!)}
+                isDisabled={index >= numberOfEnemies}
+              />
+              <LevelSelect
+                id={`e${index}`}
+                name={"Direction"}
+                value={enemies[0].startDirection}
+                options={["LEFT", "RIGHT"]}
+                changeHandler={(val, id) =>
+                  handleEnemiesChange(val as string, id!, true)
+                }
+                isDisabled={index >= numberOfEnemies}
+              />
+            </Box>
+            <Divider orientation="vertical" flexItem />
+          </Box>
+        );
+      })}
+    </>
+  );
+};

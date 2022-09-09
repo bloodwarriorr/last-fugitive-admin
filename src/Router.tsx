@@ -6,6 +6,7 @@ import { AuthProvider } from "./Context/AdminContext";
 import RequireAuth from "./Components/Utils/RequireAuth";
 import Navbar from "./Components/NavBar";
 import Levels from "./Pages/Levels";
+import Footer from "./Components/Footer";
 
 type Props = {};
 
@@ -37,6 +38,7 @@ const Router: React.FC<Props> = () => {
           }
         />
       </Routes>
+      <Footer/>
     </AuthProvider>
   );
 };
