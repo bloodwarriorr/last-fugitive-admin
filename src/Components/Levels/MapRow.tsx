@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { SetStateAction } from 'react'
+import React from 'react'
 import { LevelType } from '../../Types/Types';
 import MapBox from './MapBox';
 

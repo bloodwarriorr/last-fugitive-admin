@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from "react";
+import React, {useState } from "react";
 import tile from "../../Assets/tile.png";
 import collider from "../../Assets/colider.png";
 import playerImg from "../../Assets/playerImg.png";

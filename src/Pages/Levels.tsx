@@ -1,10 +1,9 @@
-import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import React, { useEffect,useState } from "react";
 import LevelSelect from "../Components/Levels/LevelSelect";
 import { getAllLevels } from "../Database/database";
 import { useAuth } from "../Context/AdminContext";
-import { emptyLevel, EnimiesType, LevelType, PlayerType } from "../Types/Types";
-
+import { emptyLevel, LevelType } from "../Types/Types";
 import LevelNumberInput from "../Components/Levels/LevelNumberInput";
 import PositionButton from "../Components/Levels/PositionButton";
 import { TOGGLES } from "../Components/Utils/constants";
@@ -91,7 +90,7 @@ const Levels: React.FC<Props> = (props) => {
     steps[index].step = parseInt(val);
     setLevelObject({ ...levelObject, step_cap: [...steps] });
   };
-  console.log(Object.values(TOGGLES).slice(1,4))
+
   return (
     <Box>
       <div
@@ -164,6 +163,7 @@ const Levels: React.FC<Props> = (props) => {
           </Paper>
         </Box>
         <Divider />
+
         <Box>
           {levelObject.map.map((row, index) => {
             return (
@@ -178,6 +178,7 @@ const Levels: React.FC<Props> = (props) => {
             );
           })}
         </Box>
+
         <Divider />
 
         <Box>
@@ -200,7 +201,7 @@ const Levels: React.FC<Props> = (props) => {
                 isPressed={toggles[TOGGLES.EXIT]}
                 setIsPressed={() => handleToggles(TOGGLES.EXIT)}
               />
-              
+
               <PositionButton
                 label="Enemy 1"
                 isPressed={toggles[TOGGLES.ENEMY1]}
@@ -221,6 +222,7 @@ const Levels: React.FC<Props> = (props) => {
             </Box>
           </Paper>
         </Box>
+
         <Box textAlign={"center"} marginTop={1}>
           <Button variant="contained">Create Level</Button>
         </Box>
@@ -230,43 +232,3 @@ const Levels: React.FC<Props> = (props) => {
 };
 
 export default Levels;
-
-// const EnemiesSettings = ({
-//   numberOfEnemies,
-//   enemies,
-//   handleEnemiesChange,
-// }: any) => {
-//   return (
-//     <>
-//       {[...Array(3)].map((el, index) => {
-//         return (
-//           <Box key={index} display={"flex"} alignItems="center">
-//             <Divider orientation="vertical" flexItem>
-//               Enemy {index + 1}
-//             </Divider>
-//             <Box>
-//               <LevelArrayInput
-//                 id={`e${index}`}
-//                 name={"Position"}
-//                 label={"y,x"}
-//                 changeHandler={(val, id) => handleEnemiesChange(val, id!)}
-//                 isDisabled={index >= numberOfEnemies}
-//               />
-//               <LevelSelect
-//                 id={`e${index}`}
-//                 name={"Direction"}
-//                 value={enemies[0].startDirection}
-//                 options={["LEFT", "RIGHT"]}
-//                 changeHandler={(val, id) =>
-//                   handleEnemiesChange(val as string, id!, true)
-//                 }
-//                 isDisabled={index >= numberOfEnemies}
-//               />
-//             </Box>
-//             <Divider orientation="vertical" flexItem />
-//           </Box>
-//         );
-//       })}
-//     </>
-//   );
-// };
