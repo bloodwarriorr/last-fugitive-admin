@@ -10,7 +10,6 @@ import React from "react";
 type Props = {
   id?: string;
   name: string;
-  label?: string;
   value: string | number;
   options: number[] | string[];
   changeHandler: (e: number|string,id?:string) => void;
@@ -20,7 +19,6 @@ type Props = {
 const LevelSelect: React.FC<Props> = ({
   id,
   name,
-  label,
   value,
   options,
   changeHandler,

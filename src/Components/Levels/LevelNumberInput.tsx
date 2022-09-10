@@ -1,20 +1,12 @@
-import { ElectricScooterOutlined } from "@mui/icons-material";
-import {
-  FormControl,
-  SelectChangeEvent,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { parse } from "node:path/win32";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { LevelType } from "../../Types/Types";
+import { FormControl, TextField, Typography } from "@mui/material";
+import React from "react";
 
 type Props = {
   id: string;
   name: string;
   label: string;
   value: number;
-  min?:number
+  min?: number;
   changeHandler: (e: string, id: string) => void;
 };
 
@@ -24,29 +16,13 @@ const LevelNumberInput: React.FC<Props> = ({
   label,
   changeHandler,
   value,
-  min
+  min,
 }) => {
-
-  // const errorHandler = () => {
-  //     return !!!value && !!parseInt(value);
-    
-  // };
-  // useEffect(() => {
-  //   setIsError(errorHandler());
-  // },[value]);
-
-  // useEffect(() => {
-  //   if(!isError){
-  //     setLevelObject(parseInt(value))
-  //   }
-  // }, [isError])
-  
-
   return (
     <FormControl sx={{ m: 1, maxWidth: "93px" }}>
       <Typography variant="subtitle2">{name}</Typography>
       <TextField
-        type={'number'}
+        type={"number"}
         id={id}
         value={value}
         placeholder={label}
@@ -54,7 +30,7 @@ const LevelNumberInput: React.FC<Props> = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           changeHandler(e.target.value, id)
         }
-        inputProps={{ min: min ? min : 4}}
+        inputProps={{ min: min ? min : 4 }}
       />
     </FormControl>
   );

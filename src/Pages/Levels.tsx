@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import LevelArrayInput from "../Components/Levels/LevelArrayInput";
 import LevelSelect from "../Components/Levels/LevelSelect";
 import { getAllLevels } from "../Database/database";
 import { useAuth } from "../Context/AdminContext";
@@ -103,7 +102,6 @@ const Levels = (props: Props) => {
       return false;
     });
     setToggles(updated);
-    console.log(updated);
   };
   const handleStepCapChange = (val: string, id: string) => {
     const index = parseInt(id[1]);
@@ -260,6 +258,7 @@ export const MapRow = (props: any) => {
   const rows = props.row.map((col: any, index: any) => {
     return (
       <MapBox
+        key={index}
         toggles={props.toggles}
         cellIndex={index}
         rowIndex={props.index}

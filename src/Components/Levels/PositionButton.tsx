@@ -1,17 +1,6 @@
-import { ElectricScooterOutlined } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  SelectChangeEvent,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { isDisabled } from "@testing-library/user-event/dist/utils";
-import { parse } from "node:path/win32";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { LevelType } from "../../Types/Types";
+import { Box, Button, Divider } from "@mui/material";
+
+import React from "react";
 
 type Props = {
   id?: string;
@@ -28,13 +17,13 @@ const PositionButton: React.FC<Props> = ({
   isPressed,
   setIsPressed,
 }) => {
-  console.log(isPressed)
   return (
     <Box m={1}>
       <Divider orientation="vertical" flexItem>
         {label}
       </Divider>
       <Button
+        id={id}
         variant={!isPressed ? "outlined" : "contained"}
         onClick={setIsPressed}
         disabled={isDisabled}
