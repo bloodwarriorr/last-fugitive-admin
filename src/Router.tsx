@@ -11,7 +11,6 @@ import Footer from "./Components/Footer";
 type Props = {};
 
 const Router: React.FC<Props> = () => {
-  console.count("router");
   const [refershKey, setRefershKey] = useState(0);
   return (
     <AuthProvider>

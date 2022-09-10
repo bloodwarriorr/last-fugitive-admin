@@ -1,15 +1,12 @@
-import { AlertColor } from "@mui/material";
-import React, { SetStateAction } from "react";
+
+import React from "react";
 
 export interface AlertType {
   isOpen: boolean;
   type: "error" | "success";
+  message:string
 }
-export interface UtilsContextType {
-  setIsLoader: React.Dispatch<SetStateAction<boolean>>;
-  setAlert: React.Dispatch<SetStateAction<AlertType>>;
-  children?: React.ReactNode;
-}
+
 export interface AdminDetailsType {
   email: string;
   password: string;

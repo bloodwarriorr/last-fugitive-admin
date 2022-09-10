@@ -3,7 +3,6 @@ import React, { SetStateAction } from 'react'
 
 type Props = {
   isLoader:boolean;
-  setIsLoader:React.Dispatch<SetStateAction<boolean>>
 }
 
 const Loader:React.FC<Props> = (props) => {

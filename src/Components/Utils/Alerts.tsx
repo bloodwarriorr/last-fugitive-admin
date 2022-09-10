@@ -20,7 +20,7 @@ const Alerts:React.FC<Props> = ({settings,setSettings}) => {
   return (
     <Snackbar
       open={settings.isOpen}
-      autoHideDuration={3000}
+      autoHideDuration={6000}
       onClose={handleClose}
     >
       <Alert
@@ -29,7 +29,7 @@ const Alerts:React.FC<Props> = ({settings,setSettings}) => {
         sx={{ width: "100%" }}
         variant={"filled"}
       >
-        {settings.type ==='error' ? 'Operation Failed...' : 'Operation Succsess'}
+        {settings.message}
       </Alert>
     </Snackbar>
   );

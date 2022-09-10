@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Container, Divider, Skeleton, Typography } from "@mui/material";
-import PopularLevelsChart from "../Components/PopularLevelsChart";
+import PopularLevelsChart from "../Components/Dashboard/PopularLevelsChart";
 import {
   getAmountOfGuests,
   getLevelRankAvg,
@@ -13,10 +13,12 @@ import {
   getAmountOfUsers,
 } from "../Database/database";
 import { useAuth } from "../Context/AdminContext";
-import AnnualRegistration from "../Components/AnnualRegistration";
+import AnnualRegistration from "../Components/Dashboard/AnnualRegistration";
 import SpeedDail from "../Components/Utils/SpeedDial";
-import LevelRankAvg from "../Components/LevelRankAvg";
-import PopularHours from "../Components/PopularHours";
+import LevelRankAvg from "../Components/Dashboard/LevelRankAvg";
+import PopularHours from "../Components/Dashboard/PopularHours";
+import Alerts from "../Components/Utils/Alerts";
+import { AlertType } from "../Types/Types";
 
 type Props = {
   setRefreshKey: () => void;
@@ -32,6 +34,11 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   const [popularHours, setPopularHours] = useState();
   const [amountOfUsers, setAmountOfUsers] = useState();
   const [amountOfGuests, setAmountOfGuests] = useState();
+  const [alertSettings, setAlertSettings] = useState<AlertType>({
+    isOpen: false,
+    type: "error",
+    message: "Error Fetching Some Of The Data... Try Again Later",
+  });
   const currentYear = new Date().getFullYear();
   const [yearSelect, setYearSelect] = useState(currentYear);
 
@@ -73,21 +80,24 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   }, []);
 
   useEffect(() => {
-    setTotalRegister(undefined)
+    setTotalRegister(undefined);
     getAnnualRegistration();
   }, [yearSelect]);
 
   return (
     <Container maxWidth={"xl"}>
-
-      {!(
+      <Alerts
+        settings={alertSettings}
+        setSettings={(val) => setAlertSettings(val)}
+      />
+      {/* {!(
         popularLevel &&
         totalRegister &&
         levelRankAvg &&
         popularHours &&
         amountOfUsers &&
         amountOfGuests
-      ) && <FetchTimer />}
+      ) && <FetchTimer />} */}
 
       <Grid container spacing={5} justifyContent={"space-around"}>
         <Grid item xs={10} md={4}>
@@ -159,13 +169,10 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
                 currentYear={currentYear}
                 yearSelect={yearSelect}
                 setYearSelect={(year) => setYearSelect(year)}
-          
               />
             </Box>
           </Paper>
         </Grid>
-
-
 
         <Grid item xs={12} md={6}>
           <Paper elevation={5}>

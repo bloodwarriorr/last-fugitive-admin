@@ -12,7 +12,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Stats from "./Stats";
 import { useAuth } from "../Context/AdminContext";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
@@ -31,7 +30,6 @@ export default function Navbar(props: Props) {
   };
   const navigate = useNavigate();
   const location = useLocation();
-  console.count("navbar");
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -44,7 +42,7 @@ export default function Navbar(props: Props) {
             sx={{ textAlign: "center" }}
             onClick={() => navigate("/dashboard")}
           >
-            <ListItemText primary="Stats" />
+            <ListItemText primary="Dashboard" />
           </ListItemButton>
         </ListItem>
 
@@ -101,7 +99,7 @@ export default function Navbar(props: Props) {
                   sx={{ color: "#fff" }}
                   onClick={() => navigate("/dashboard")}
                 >
-                  Stats
+                  Dashboard
                 </Button>
                 <Button
                   sx={{ color: "#fff" }}
