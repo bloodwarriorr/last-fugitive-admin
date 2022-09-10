@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import LevelSelect from "../Components/Levels/LevelSelect";
 import { getAllLevels } from "../Database/database";
@@ -15,23 +8,18 @@ import { emptyLevel, EnimiesType, LevelType, PlayerType } from "../Types/Types";
 import LevelNumberInput from "../Components/Levels/LevelNumberInput";
 import PositionButton from "../Components/Levels/PositionButton";
 import { TOGGLES } from "../Components/Utils/constants";
-import MapBox from "../Components/Levels/MapBox";
 import MapRow from "../Components/Levels/MapRow";
 
 type Props = {};
 
-const Levels:React.FC<Props> = (props) => {
+const Levels: React.FC<Props> = (props) => {
   const auth = useAuth();
   const [levelObject, setLevelObject] = useState<LevelType>(emptyLevel);
   const [allLevels, setAllLevels] = useState();
   const [levelCode, setLevelCode] = useState();
   const [levelSize, setLevelSize] = useState({ x: 8, y: 4 });
   const [numberOfEnemies, setNumberOfEnemies] = useState(1);
-  const [gameMap, setGameMap] = useState([
-    ...Array(4).fill([...Array(8).fill(0)]),
-  ]);
 
-  // const [playerToggle, setPlayerToggle] = useState(false)
   const [toggles, setToggles] = useState([false, false, false, false, false]);
   useEffect(() => {
     const getLevels = async () => {
@@ -43,10 +31,11 @@ const Levels:React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
+    //סגירת כל הטוגלים
     handleToggles();
-    const newMap = JSON.parse(JSON.stringify(gameMap));
-    const rowDiff = levelSize.y - gameMap.length;
-    const cellDiff = levelSize.x - gameMap[0].length;
+    const newMap = JSON.parse(JSON.stringify(levelObject.map));
+    const rowDiff = levelSize.y - levelObject.map.length;
+    const cellDiff = levelSize.x - levelObject.map[0].length;
     if (rowDiff > 0 || cellDiff > 0) {
       for (let i = 0; i < rowDiff; i++) {
         newMap.push([...Array(levelSize.x).fill(0)]);
@@ -70,12 +59,14 @@ const Levels:React.FC<Props> = (props) => {
   }, [levelSize]);
 
   useEffect(() => {
+    //סגירת כל הטוגלים
+    handleToggles();
     const enemiesDiff = numberOfEnemies - levelObject.enemies.length;
     if (enemiesDiff > 0) {
       for (let i = 0; i < enemiesDiff; i++) {
         levelObject.enemies.push({
           code: i + 1,
-          start_position: [5, 1],
+          start_position: [-1, -1],
           startDirection: "RIGHT",
         });
       }
@@ -100,7 +91,7 @@ const Levels:React.FC<Props> = (props) => {
     steps[index].step = parseInt(val);
     setLevelObject({ ...levelObject, step_cap: [...steps] });
   };
-
+  console.log(Object.values(TOGGLES).slice(1,4))
   return (
     <Box>
       <div
@@ -130,17 +121,13 @@ const Levels:React.FC<Props> = (props) => {
                 name={"Rows"}
                 value={levelSize.y}
                 options={[4, 5, 6]}
-                changeHandler={(val) =>
-                  setLevelSize({ ...levelSize, y: val as number })
-                }
+                changeHandler={(val) => setLevelSize({ ...levelSize, y: val as number })}
               />
               <LevelSelect
                 name={"Cols"}
                 value={levelSize.x}
                 options={[8, 9, 10, 11, 12, 13]}
-                changeHandler={(val) =>
-                  setLevelSize({ ...levelSize, x: val as number })
-                }
+                changeHandler={(val) => setLevelSize({ ...levelSize, x: val as number })}
               />
               <LevelSelect
                 name={"Difficulty"}
@@ -205,30 +192,31 @@ const Levels:React.FC<Props> = (props) => {
             >
               <PositionButton
                 label="Player"
-                isPressed={toggles[TOGGLES.player]}
-                setIsPressed={() => handleToggles(TOGGLES.player)}
+                isPressed={toggles[TOGGLES.PLAYER]}
+                setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
               />
               <PositionButton
                 label="Exit"
-                isPressed={toggles[TOGGLES.exit]}
-                setIsPressed={() => handleToggles(TOGGLES.exit)}
+                isPressed={toggles[TOGGLES.EXIT]}
+                setIsPressed={() => handleToggles(TOGGLES.EXIT)}
               />
+              
               <PositionButton
                 label="Enemy 1"
-                isPressed={toggles[TOGGLES.enemy1]}
-                setIsPressed={() => handleToggles(TOGGLES.enemy1)}
+                isPressed={toggles[TOGGLES.ENEMY1]}
+                setIsPressed={() => handleToggles(TOGGLES.ENEMY1)}
               />
               <PositionButton
                 label="Enemy 2"
-                isPressed={toggles[TOGGLES.enemy2]}
+                isPressed={toggles[TOGGLES.ENEMY2]}
                 isDisabled={numberOfEnemies < 2}
-                setIsPressed={() => handleToggles(TOGGLES.enemy2)}
+                setIsPressed={() => handleToggles(TOGGLES.ENEMY2)}
               />
               <PositionButton
                 label="Enemy 3"
-                isPressed={toggles[TOGGLES.enemy3]}
+                isPressed={toggles[TOGGLES.ENEMY3]}
                 isDisabled={numberOfEnemies < 3}
-                setIsPressed={() => handleToggles(TOGGLES.enemy3)}
+                setIsPressed={() => handleToggles(TOGGLES.ENEMY3)}
               />
             </Box>
           </Paper>

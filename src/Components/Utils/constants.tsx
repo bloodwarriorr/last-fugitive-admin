@@ -1,7 +1,7 @@
 export const TOGGLES = {
-  player: 0,
-  exit: 4,
-  enemy1: 1,
-  enemy2: 2,
-  enemy3: 3,
+  PLAYER: 0,
+  ENEMY1: 1,
+  ENEMY2: 2,
+  ENEMY3: 3,
+  EXIT: 4,
 };
