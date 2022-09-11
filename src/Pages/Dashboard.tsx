@@ -62,43 +62,29 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     const levelAvg = await getLevelRankAvg(auth?.token!);
     setLevelRankAvg(levelAvg);
   };
-  const getAnnualRegistration = async () => {
-    const totRegister = await getTotalRegistrationByYear(
-      auth?.token!,
-      yearSelect
-    );
+  const getAnnualRegistration = async (year:number) => {
+    const totRegister = await getTotalRegistrationByYear(auth?.token!, year);
     setTotalRegister(totRegister);
   };
+  const handleYearChange = (year:number) => {
+    setYearSelect(year)
+    getAnnualRegistration(year)
+    
+
+  }
   useEffect(() => {
-    console.time("fetch");
     getRegisterUsers();
     getGuestsUser();
     getPopLevels();
     getPopHours();
     getLevelAvg();
-    getAnnualRegistration();
+    getAnnualRegistration(currentYear);
   }, []);
 
-  useEffect(() => {
-    setTotalRegister(undefined);
-    getAnnualRegistration();
-  }, [yearSelect]);
 
   return (
     <Container maxWidth={"xl"}>
-      <Alerts
-        settings={alertSettings}
-        setSettings={(val) => setAlertSettings(val)}
-      />
-      {/* {!(
-        popularLevel &&
-        totalRegister &&
-        levelRankAvg &&
-        popularHours &&
-        amountOfUsers &&
-        amountOfGuests
-      ) && <FetchTimer />} */}
-
+      <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
       <Grid container spacing={5} justifyContent={"space-around"}>
         <Grid item xs={10} md={4}>
           <Paper elevation={5}>
@@ -168,7 +154,9 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
                 minYear={MIN_YEAR}
                 currentYear={currentYear}
                 yearSelect={yearSelect}
-                setYearSelect={(year) => setYearSelect(year)}
+                setTotalRegister = {()=>setTotalRegister(undefined)}
+                handleYearChange={(year:number) => handleYearChange(year)}
+                
               />
             </Box>
           </Paper>
@@ -186,15 +174,6 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
       <SpeedDail refreshData={setRefreshKey} />
     </Container>
   );
-};
-const FetchTimer = () => {
-  useEffect(() => {
-    return () => {
-      console.timeEnd("fetch");
-    };
-  }, []);
-
-  return <div></div>;
 };
 
 export default Dashboard;

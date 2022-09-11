@@ -32,6 +32,7 @@ const Levels: React.FC<Props> = (props) => {
   useEffect(() => {
     //סגירת כל הטוגלים
     handleToggles();
+    
     const newMap = JSON.parse(JSON.stringify(levelObject.map));
     const rowDiff = levelSize.y - levelObject.map.length;
     const cellDiff = levelSize.x - levelObject.map[0].length;

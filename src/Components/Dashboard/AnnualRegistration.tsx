@@ -24,7 +24,8 @@ type Props = {
   data: { _id: number; Value: number }[] | null;
   currentYear: number;
   yearSelect: number;
-  setYearSelect: React.Dispatch<SetStateAction<number>>;
+  handleYearChange: (year:number)=>void
+  setTotalRegister: ()=>void
 };
 
 const AnnualRegistration: React.FC<Props> = ({
@@ -32,11 +33,12 @@ const AnnualRegistration: React.FC<Props> = ({
   minYear,
   currentYear,
   yearSelect,
-  setYearSelect,
+  handleYearChange,
+  setTotalRegister
 }) => {
-  const handleYearChange = (e: any) => {
-    data = null;
-    setYearSelect(e.target.value);
+  const handleChange = (e: any) => {
+    setTotalRegister()
+    handleYearChange(e.target.value);
   };
   return (
     <>
@@ -49,7 +51,7 @@ const AnnualRegistration: React.FC<Props> = ({
             variant="standard"
             defaultValue={yearSelect}
             value={yearSelect}
-            onChange={handleYearChange}
+            onChange={handleChange}
           >
             {[...Array(currentYear + 2 - minYear)].map((y, index) => {
               return (
