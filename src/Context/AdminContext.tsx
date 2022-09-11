@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Alerts from "../Components/Utils/Alerts";
-import Loader from "../Components/Utils/Loader";
 import { signIn } from "../Database/database";
-import { AdminContextType, AdminDetailsType, AlertType } from "../Types/Types";
+import { AdminContextType, AdminDetailsType } from "../Types/Types";
 
 const authContext = createContext<AdminContextType | null>(null);
 
