@@ -87,7 +87,6 @@ const Levels: React.FC<Props> = (props) => {
   const handleStepCapChange = (val: string, id: string) => {
     const index = parseInt(id[1]);
     const steps = levelObject.step_cap;
-
     steps[index].step = parseInt(val);
     setLevelObject({ ...levelObject, step_cap: [...steps] });
   };
