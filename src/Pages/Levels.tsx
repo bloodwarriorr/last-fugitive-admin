@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import LevelSelect from "../Components/Levels/LevelSelect";
 import { getAllLevels, InsertLevel } from "../Database/database";
 import { useAuth } from "../Context/AdminContext";
@@ -16,7 +16,7 @@ type Props = {
   setRefreshKey: () => void;
 };
 
-const Levels: React.FC<Props> = ({setRefreshKey}) => {
+const Levels: React.FC<Props> = ({ setRefreshKey }) => {
   const auth = useAuth();
   const [isLoader, setIsLoader] = useState(false);
   const [levelObject, setLevelObject] = useState<LevelType>(emptyLevel);
@@ -34,9 +34,9 @@ const Levels: React.FC<Props> = ({setRefreshKey}) => {
     const getLevels = async () => {
       const levels = await getAllLevels(auth?.token!);
       setAllLevels(levels);
-      let newLevelCode=levels.length + 1
+      let newLevelCode = levels.length + 1;
       setLevelCode(newLevelCode);
-      setLevelObject({...levelObject,code:newLevelCode})
+      setLevelObject({ ...levelObject, code: newLevelCode });
     };
     getLevels();
   }, []);
@@ -44,7 +44,7 @@ const Levels: React.FC<Props> = ({setRefreshKey}) => {
   useEffect(() => {
     //סגירת כל הטוגלים
     handleToggles();
-    
+
     const newMap = JSON.parse(JSON.stringify(levelObject.map));
     const rowDiff = levelSize.y - levelObject.map.length;
     const cellDiff = levelSize.x - levelObject.map[0].length;
@@ -100,196 +100,197 @@ const Levels: React.FC<Props> = ({setRefreshKey}) => {
     const index = parseInt(id[1]);
     const steps = levelObject.step_cap;
     steps[index].step = parseInt(val);
-    steps[index].code =index===0?3:2;
+    steps[index].code = index === 0 ? 3 : 2;
     setLevelObject({ ...levelObject, step_cap: [...steps] });
   };
 
-
-  const handleSubmit=async()=>{
-    setIsLoader(true)
-  
-    handleToggles()
-    const enemies=levelObject.enemies
-    const player=levelObject.player.start_position
+  const handleSubmit = async () => {
+    handleToggles();
+    setIsLoader(true);
+    const enemies = levelObject.enemies;
+    const player = levelObject.player.start_position;
     //check if enemy is not in [-1,-1]
-    const answer=enemies.some((enemy)=>enemy.start_position[0]===-1&&enemy.start_position[1]===-1)
+    const isInvalidEnemy = enemies.some(
+      (enemy) => enemy.start_position[0] === -1 && enemy.start_position[1] === -1
+    );
     //set exit index
-    let endY=levelObject.end_point[0]
-    let endX=levelObject.end_point[1]
-    const map=JSON.parse(JSON.stringify(levelObject.map))
-    map[endY][endX] =-1
+    let endY = levelObject.end_point[0];
+    let endX = levelObject.end_point[1];
+    const map = JSON.parse(JSON.stringify(levelObject.map));
+    map[endY][endX] = -1;
     //check user position from enemy
-   let isCollides=enemies.some((enemy)=>enemy.start_position[0]===player[0]+1&&enemy.start_position[1]===player[1]||
-    enemy.start_position[1]===player[1]+1&&enemy.start_position[0]===player[0]||
-    enemy.start_position[0]===player[0]-1&&enemy.start_position[1]===player[1]||
-    enemy.start_position[1]===player[1]-1&&enemy.start_position[0]===player[0])
-    if(!answer&&!isCollides){
-      const data={...levelObject,map}
-      setLevelObject(data)
-      const levelAdded=await InsertLevel(auth?.token!,data)
+    let isCollides = enemies.some(
+      (enemy) =>
+        (enemy.start_position[0] === player[0] + 1 && enemy.start_position[1] === player[1]) ||
+        (enemy.start_position[1] === player[1] + 1 && enemy.start_position[0] === player[0]) ||
+        (enemy.start_position[0] === player[0] - 1 && enemy.start_position[1] === player[1]) ||
+        (enemy.start_position[1] === player[1] - 1 && enemy.start_position[0] === player[0])
+    );
+    if (!isInvalidEnemy && !isCollides) {
+      const data = { ...levelObject, map };
+      setLevelObject(data);
+      const levelAdded = await InsertLevel(auth?.token!, data);
       setAlertSettings({
         isOpen: true,
         type: "success",
         message: "Level added successfully!",
-      })
-      setRefreshKey()
-    }
-    else{
+      });
+      setRefreshKey();
+    } else {
       setAlertSettings({
         isOpen: true,
         type: "error",
         message: "Error while adding level, please check you fields and try again!",
-      })
+      });
     }
-    setIsLoader(false)
-  }
+    setIsLoader(false);
+  };
 
   return (
     <>
-    <Loader isLoader={isLoader} />
-    <Alerts
-      settings={alertSettings}
-      setSettings={(val) => setAlertSettings(val)}/>
-      
-    <Box>
-      <div
-        style={{
-          height: "calc(100vh - 231px)",
-          display: "grid",
-          gridTemplateRows: "2fr auto 5fr auto 2fr auto",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <Box>
-          <Typography>Settings</Typography>
-          <Paper>
-            <Box
-              p={1}
-              display={"flex"}
-              alignItems="center"
-              flexWrap={"wrap"}
-              justifyContent={"space-around"}
-            >
-              <Box>
-                <Typography variant="subtitle2">Level Code</Typography>
-                <Typography variant="h6">{levelCode}</Typography>
+      <Loader isLoader={isLoader} />
+      <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
+
+      <Box>
+        <div
+          style={{
+            height: "calc(100vh - 231px)",
+            display: "grid",
+            gridTemplateRows: "2fr auto 5fr auto 2fr auto",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <Box>
+            <Typography>Settings</Typography>
+            <Paper>
+              <Box
+                p={1}
+                display={"flex"}
+                alignItems="center"
+                flexWrap={"wrap"}
+                justifyContent={"space-around"}
+              >
+                <Box>
+                  <Typography variant="subtitle2">Level Code</Typography>
+                  <Typography variant="h6">{levelCode}</Typography>
+                </Box>
+                <LevelSelect
+                  name={"Rows"}
+                  value={levelSize.y}
+                  options={[4, 5, 6]}
+                  changeHandler={(val) => setLevelSize({ ...levelSize, y: val as number })}
+                />
+                <LevelSelect
+                  name={"Cols"}
+                  value={levelSize.x}
+                  options={[8, 9, 10, 11, 12, 13]}
+                  changeHandler={(val) => setLevelSize({ ...levelSize, x: val as number })}
+                />
+                <LevelSelect
+                  name={"Difficulty"}
+                  value={levelObject.difficulty}
+                  options={[1, 2, 3]}
+                  changeHandler={(val) =>
+                    setLevelObject({ ...levelObject, difficulty: val as number })
+                  }
+                />
+
+                <LevelSelect
+                  name={"Enemies"}
+                  value={numberOfEnemies}
+                  options={[1, 2, 3]}
+                  changeHandler={(val) => setNumberOfEnemies(val as number)}
+                />
+                <LevelNumberInput
+                  id={"s0"}
+                  name={"★ ★ ★"}
+                  label={"number"}
+                  // min = {levelObject.step_cap[0].step}
+                  changeHandler={(val, id) => handleStepCapChange(val, id)}
+                  value={levelObject.step_cap[0].step}
+                />
+                <LevelNumberInput
+                  id={"s1"}
+                  name={"★ ★ "}
+                  label={"number"}
+                  min={levelObject.step_cap[0].step + 1}
+                  changeHandler={(val, id) => handleStepCapChange(val, id)}
+                  value={levelObject.step_cap[1].step}
+                />
               </Box>
-              <LevelSelect
-                name={"Rows"}
-                value={levelSize.y}
-                options={[4, 5, 6]}
-                changeHandler={(val) => setLevelSize({ ...levelSize, y: val as number })}
-              />
-              <LevelSelect
-                name={"Cols"}
-                value={levelSize.x}
-                options={[8, 9, 10, 11, 12, 13]}
-                changeHandler={(val) => setLevelSize({ ...levelSize, x: val as number })}
-              />
-              <LevelSelect
-                name={"Difficulty"}
-                value={levelObject.difficulty}
-                options={[1, 2, 3]}
-                changeHandler={(val) =>
-                  setLevelObject({ ...levelObject, difficulty: val as number })
-                }
-              />
+            </Paper>
+          </Box>
+          <Divider />
 
-              <LevelSelect
-                name={"Enemies"}
-                value={numberOfEnemies}
-                options={[1, 2, 3]}
-                changeHandler={(val) => setNumberOfEnemies(val as number)}
-              />
-              <LevelNumberInput
-                id={"s0"}
-                name={"★ ★ ★"}
-                label={"number"}
-                // min = {levelObject.step_cap[0].step}
-                changeHandler={(val, id) => handleStepCapChange(val, id)}
-                value={levelObject.step_cap[0].step}
-              />
-              <LevelNumberInput
-                id={"s1"}
-                name={"★ ★ "}
-                label={"number"}
-                min={levelObject.step_cap[0].step + 1}
-                changeHandler={(val, id) => handleStepCapChange(val, id)}
-                value={levelObject.step_cap[1].step}
-              />
-            </Box>
-          </Paper>
-        </Box>
-        <Divider />
+          <Box>
+            {levelObject.map.map((row, index) => {
+              return (
+                <MapRow
+                  key={index}
+                  index={index}
+                  row={row}
+                  toggles={toggles}
+                  levelObject={levelObject}
+                  setLevelObject={(obj: LevelType) => setLevelObject(obj)}
+                />
+              );
+            })}
+          </Box>
 
-        <Box>
-          {levelObject.map.map((row, index) => {
-            return (
-              <MapRow
-                key={index}
-                index={index}
-                row={row}
-                toggles={toggles}
-                levelObject={levelObject}
-                setLevelObject={(obj: LevelType) => setLevelObject(obj)}
-              />
-            );
-          })}
-        </Box>
+          <Divider />
 
-        <Divider />
+          <Box>
+            <Typography>Positions</Typography>
+            <Paper>
+              <Box
+                p={1}
+                display={"flex"}
+                alignItems="center"
+                flexWrap={"wrap"}
+                justifyContent={"space-around"}
+              >
+                <PositionButton
+                  label="Player"
+                  isPressed={toggles[TOGGLES.PLAYER]}
+                  setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
+                />
+                <PositionButton
+                  label="Exit"
+                  isPressed={toggles[TOGGLES.EXIT]}
+                  setIsPressed={() => handleToggles(TOGGLES.EXIT)}
+                />
 
-        <Box>
-          <Typography>Positions</Typography>
-          <Paper>
-            <Box
-              p={1}
-              display={"flex"}
-              alignItems="center"
-              flexWrap={"wrap"}
-              justifyContent={"space-around"}
-            >
-              <PositionButton
-                label="Player"
-                isPressed={toggles[TOGGLES.PLAYER]}
-                setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
-              />
-              <PositionButton
-                label="Exit"
-                isPressed={toggles[TOGGLES.EXIT]}
-                setIsPressed={() => handleToggles(TOGGLES.EXIT)}
-              />
+                <PositionButton
+                  label="Enemy 1"
+                  isPressed={toggles[TOGGLES.ENEMY1]}
+                  setIsPressed={() => handleToggles(TOGGLES.ENEMY1)}
+                />
+                <PositionButton
+                  label="Enemy 2"
+                  isPressed={toggles[TOGGLES.ENEMY2]}
+                  isDisabled={numberOfEnemies < 2}
+                  setIsPressed={() => handleToggles(TOGGLES.ENEMY2)}
+                />
+                <PositionButton
+                  label="Enemy 3"
+                  isPressed={toggles[TOGGLES.ENEMY3]}
+                  isDisabled={numberOfEnemies < 3}
+                  setIsPressed={() => handleToggles(TOGGLES.ENEMY3)}
+                />
+              </Box>
+            </Paper>
+          </Box>
 
-              <PositionButton
-                label="Enemy 1"
-                isPressed={toggles[TOGGLES.ENEMY1]}
-                setIsPressed={() => handleToggles(TOGGLES.ENEMY1)}
-              />
-              <PositionButton
-                label="Enemy 2"
-                isPressed={toggles[TOGGLES.ENEMY2]}
-                isDisabled={numberOfEnemies < 2}
-                setIsPressed={() => handleToggles(TOGGLES.ENEMY2)}
-              />
-              <PositionButton
-                label="Enemy 3"
-                isPressed={toggles[TOGGLES.ENEMY3]}
-                isDisabled={numberOfEnemies < 3}
-                setIsPressed={() => handleToggles(TOGGLES.ENEMY3)}
-              />
-            </Box>
-          </Paper>
-        </Box>
-
-        <Box textAlign={"center"} marginTop={1}>
-          <Button onClick={handleSubmit} variant="contained">Create Level</Button>
-        </Box>
-      </div>
-    </Box>
+          <Box textAlign={"center"} marginTop={1}>
+            <Button onClick={handleSubmit} variant="contained">
+              Create Level
+            </Button>
+          </Box>
+        </div>
+      </Box>
     </>
   );
 };
-
 
 export default Levels;
