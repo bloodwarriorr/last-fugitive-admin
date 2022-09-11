@@ -114,12 +114,12 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
       (enemy) => enemy.start_position[0] === -1 && enemy.start_position[1] === -1
     );
     //set exit index
-    let endY = levelObject.end_point[0];
-    let endX = levelObject.end_point[1];
+    const endY = levelObject.end_point[0];
+    const endX = levelObject.end_point[1];
     const map = JSON.parse(JSON.stringify(levelObject.map));
     map[endY][endX] = -1;
     //check user position from enemy
-    let isCollides = enemies.some(
+    const isCollides = enemies.some(
       (enemy) =>
         (enemy.start_position[0] === player[0] + 1 && enemy.start_position[1] === player[1]) ||
         (enemy.start_position[1] === player[1] + 1 && enemy.start_position[0] === player[0]) ||

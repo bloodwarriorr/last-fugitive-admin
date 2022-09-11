@@ -1,5 +1,5 @@
 import { Backdrop, CircularProgress } from '@mui/material'
-import React, { SetStateAction } from 'react'
+import React from 'react'
 
 type Props = {
   isLoader:boolean;
