@@ -42,7 +42,7 @@ export interface LevelType {
   player: PlayerType;
   enemies: EnimiesType[];
   step_cap: StepCapType[];
-  diffculty: number;
+  difficulty: number;
   end_point: number[];
 }
 
@@ -70,6 +70,6 @@ export const emptyLevel = {
       step: 15,
     },
   ],
-  diffculty: 1,
+  difficulty: 1,
   end_point: [2, 7],
 };

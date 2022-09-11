@@ -1,30 +1,42 @@
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import React, { useEffect,useState } from "react";
 import LevelSelect from "../Components/Levels/LevelSelect";
-import { getAllLevels } from "../Database/database";
+import { getAllLevels, InsertLevel } from "../Database/database";
 import { useAuth } from "../Context/AdminContext";
 import { emptyLevel, LevelType } from "../Types/Types";
 import LevelNumberInput from "../Components/Levels/LevelNumberInput";
 import PositionButton from "../Components/Levels/PositionButton";
 import { TOGGLES } from "../Components/Utils/constants";
 import MapRow from "../Components/Levels/MapRow";
+import Loader from "../Components/Utils/Loader";
+import Alerts from "../Components/Utils/Alerts";
+import { AlertType } from "../Types/Types";
 
-type Props = {};
+type Props = {
+  setRefreshKey: () => void;
+};
 
-const Levels: React.FC<Props> = (props) => {
+const Levels: React.FC<Props> = ({setRefreshKey}) => {
   const auth = useAuth();
+  const [isLoader, setIsLoader] = useState(false);
   const [levelObject, setLevelObject] = useState<LevelType>(emptyLevel);
   const [allLevels, setAllLevels] = useState();
   const [levelCode, setLevelCode] = useState();
   const [levelSize, setLevelSize] = useState({ x: 8, y: 4 });
   const [numberOfEnemies, setNumberOfEnemies] = useState(1);
-
+  const [alertSettings, setAlertSettings] = useState<AlertType>({
+    isOpen: false,
+    type: "error",
+    message: "Wrong Login Credentials...",
+  });
   const [toggles, setToggles] = useState([false, false, false, false, false]);
   useEffect(() => {
     const getLevels = async () => {
       const levels = await getAllLevels(auth?.token!);
       setAllLevels(levels);
-      setLevelCode(levels.length + 1);
+      let newLevelCode=levels.length + 1
+      setLevelCode(newLevelCode);
+      setLevelObject({...levelObject,code:newLevelCode})
     };
     getLevels();
   }, []);
@@ -88,10 +100,57 @@ const Levels: React.FC<Props> = (props) => {
     const index = parseInt(id[1]);
     const steps = levelObject.step_cap;
     steps[index].step = parseInt(val);
+    steps[index].code =index===0?3:2;
     setLevelObject({ ...levelObject, step_cap: [...steps] });
   };
 
+
+  const handleSubmit=async()=>{
+    setIsLoader(true)
+  
+    handleToggles()
+    const enemies=levelObject.enemies
+    const player=levelObject.player.start_position
+    //check if enemy is not in [-1,-1]
+    const answer=enemies.some((enemy)=>enemy.start_position[0]===-1&&enemy.start_position[1]===-1)
+    //set exit index
+    let endY=levelObject.end_point[0]
+    let endX=levelObject.end_point[1]
+    const map=JSON.parse(JSON.stringify(levelObject.map))
+    map[endY][endX] =-1
+    //check user position from enemy
+   let isCollides=enemies.some((enemy)=>enemy.start_position[0]===player[0]+1&&enemy.start_position[1]===player[1]||
+    enemy.start_position[1]===player[1]+1&&enemy.start_position[0]===player[0]||
+    enemy.start_position[0]===player[0]-1&&enemy.start_position[1]===player[1]||
+    enemy.start_position[1]===player[1]-1&&enemy.start_position[0]===player[0])
+    if(!answer&&!isCollides){
+      const data={...levelObject,map}
+      setLevelObject(data)
+      const levelAdded=await InsertLevel(auth?.token!,data)
+      setAlertSettings({
+        isOpen: true,
+        type: "success",
+        message: "Level added successfully!",
+      })
+      setRefreshKey()
+    }
+    else{
+      setAlertSettings({
+        isOpen: true,
+        type: "error",
+        message: "Error while adding level, please check you fields and try again!",
+      })
+    }
+    setIsLoader(false)
+  }
+
   return (
+    <>
+    <Loader isLoader={isLoader} />
+    <Alerts
+      settings={alertSettings}
+      setSettings={(val) => setAlertSettings(val)}/>
+      
     <Box>
       <div
         style={{
@@ -130,10 +189,10 @@ const Levels: React.FC<Props> = (props) => {
               />
               <LevelSelect
                 name={"Difficulty"}
-                value={levelObject.diffculty}
+                value={levelObject.difficulty}
                 options={[1, 2, 3]}
                 changeHandler={(val) =>
-                  setLevelObject({ ...levelObject, diffculty: val as number })
+                  setLevelObject({ ...levelObject, difficulty: val as number })
                 }
               />
 
@@ -224,11 +283,13 @@ const Levels: React.FC<Props> = (props) => {
         </Box>
 
         <Box textAlign={"center"} marginTop={1}>
-          <Button variant="contained">Create Level</Button>
+          <Button onClick={handleSubmit} variant="contained">Create Level</Button>
         </Box>
       </div>
     </Box>
+    </>
   );
 };
+
 
 export default Levels;
