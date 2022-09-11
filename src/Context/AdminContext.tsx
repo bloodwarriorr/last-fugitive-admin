@@ -35,7 +35,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     setToken(null);
     navigate("/");
   };
-  console.count("admin context");
   return (
     <authContext.Provider
       value={{

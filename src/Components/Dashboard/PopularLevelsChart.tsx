@@ -2,11 +2,9 @@ import { Box, Divider, Skeleton, Typography } from "@mui/material";
 import {
   PieChart,
   Pie,
-  Sector,
   Cell,
   ResponsiveContainer,
   Legend,
-  Label,
 } from "recharts";
 
 type Props = {

@@ -7,8 +7,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import React, { SetStateAction, useState } from "react";
-import { render } from "react-dom";
+import React from "react";
 import {
   AreaChart,
   Area,

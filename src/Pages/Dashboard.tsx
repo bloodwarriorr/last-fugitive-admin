@@ -25,7 +25,6 @@ type Props = {
 };
 
 const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
-  console.count("dashboard");
   const MIN_YEAR = 2022;
   const auth = useAuth();
   const [popularLevel, setPopularLevel] = useState();
@@ -69,9 +68,8 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   const handleYearChange = (year:number) => {
     setYearSelect(year)
     getAnnualRegistration(year)
-    
-
   }
+  
   useEffect(() => {
     getRegisterUsers();
     getGuestsUser();
