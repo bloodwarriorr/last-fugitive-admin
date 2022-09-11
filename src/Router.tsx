@@ -11,7 +11,8 @@ import Footer from "./Components/Footer";
 type Props = {};
 
 const Router: React.FC<Props> = () => {
-  const [refershKey, setRefershKey] = useState(0);
+  const [dashboardRefershKey, setDashboardRefershKey] = useState(0);
+  const [levelRefershKey, setLevelRefershKey] = useState(0);
   return (
     <AuthProvider>
       <Navbar />
@@ -22,8 +23,8 @@ const Router: React.FC<Props> = () => {
           element={
             <RequireAuth>
               <Dashboard
-                key={refershKey}
-                setRefreshKey={() => setRefershKey((key) => key + 1)}
+                key={dashboardRefershKey}
+                setRefreshKey={() => setDashboardRefershKey((key) => key + 1)}
               />
             </RequireAuth>
           }
@@ -32,7 +33,7 @@ const Router: React.FC<Props> = () => {
           path="/levels"
           element={
             <RequireAuth>
-              <Levels />
+              <Levels   key={levelRefershKey} setRefreshKey={() => setLevelRefershKey((key) => key + 1)} />
             </RequireAuth>
           }
         />
