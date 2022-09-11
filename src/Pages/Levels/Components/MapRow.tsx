@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react'
-import { LevelType } from '../../Types/Types';
+import { LevelType } from '../../../Types/Types';
 import MapBox from './MapBox';
 
 type Props = {

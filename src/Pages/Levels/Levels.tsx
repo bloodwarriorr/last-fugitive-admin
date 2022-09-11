@@ -1,16 +1,16 @@
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import LevelSelect from "../Components/Levels/LevelSelect";
-import { getAllLevels, InsertLevel } from "../Database/database";
-import { useAuth } from "../Context/AdminContext";
-import { emptyLevel, LevelType } from "../Types/Types";
-import LevelNumberInput from "../Components/Levels/LevelNumberInput";
-import PositionButton from "../Components/Levels/PositionButton";
-import { TOGGLES } from "../Components/Utils/constants";
-import MapRow from "../Components/Levels/MapRow";
-import Loader from "../Components/Utils/Loader";
-import Alerts from "../Components/Utils/Alerts";
-import { AlertType } from "../Types/Types";
+import LevelSelect from "./Components/LevelSelect";
+import { getAllLevels, InsertLevel } from "../../Database/database";
+import { useAuth } from "../../Context/AdminContext";
+import { emptyLevel, LevelType } from "../../Types/Types";
+import LevelNumberInput from "./Components/LevelNumberInput";
+import PositionButton from "./Components/PositionButton";
+import { TOGGLES } from "../../Utils/constants";
+import MapRow from "./Components/MapRow";
+import Loader from "../../Components/Loader";
+import Alerts from "../../Components/Alerts";
+import { AlertType } from "../../Types/Types";
 
 type Props = {
   setRefreshKey: () => void;

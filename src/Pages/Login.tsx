@@ -9,8 +9,8 @@ import {
 import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Alerts from "../Components/Utils/Alerts";
-import Loader from "../Components/Utils/Loader";
+import Alerts from "../Components/Alerts";
+import Loader from "../Components/Loader";
 import { useAuth } from "../Context/AdminContext";
 import { AlertType } from "../Types/Types";
 

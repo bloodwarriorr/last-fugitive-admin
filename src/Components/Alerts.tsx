@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react";
 import { Alert, AlertColor, Snackbar } from "@mui/material";
-import { AlertType } from "../../Types/Types";
+import { AlertType } from "../Types/Types";
 type Props = {
   settings:AlertType
   setSettings:React.Dispatch<SetStateAction<AlertType>>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../../Context/AdminContext';
+import { useAuth } from '../Context/AdminContext';
 
 
 type Props = {

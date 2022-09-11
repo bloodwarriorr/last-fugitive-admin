@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Container, Divider, Skeleton, Typography } from "@mui/material";
-import PopularLevelsChart from "../Components/Dashboard/PopularLevelsChart";
+import PopularLevelsChart from "./Components/PopularLevelsChart";
 import {
   getAmountOfGuests,
   getLevelRankAvg,
@@ -11,14 +11,14 @@ import {
   getPopularLevels,
   getTotalRegistrationByYear,
   getAmountOfUsers,
-} from "../Database/database";
-import { useAuth } from "../Context/AdminContext";
-import AnnualRegistration from "../Components/Dashboard/AnnualRegistration";
-import SpeedDail from "../Components/Utils/SpeedDial";
-import LevelRankAvg from "../Components/Dashboard/LevelRankAvg";
-import PopularHours from "../Components/Dashboard/PopularHours";
-import Alerts from "../Components/Utils/Alerts";
-import { AlertType } from "../Types/Types";
+} from "../../Database/database";
+import { useAuth } from "../../Context/AdminContext";
+import AnnualRegistration from "./Components/AnnualRegistration";
+import SpeedDail from "../../Components/SpeedDial";
+import LevelRankAvg from "./Components/LevelRankAvg";
+import PopularHours from "./Components/PopularHours";
+import Alerts from "../../Components/Alerts";
+import { AlertType } from "../../Types/Types";
 
 type Props = {
   setRefreshKey: () => void;

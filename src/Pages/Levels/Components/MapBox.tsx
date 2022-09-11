@@ -1,13 +1,13 @@
 import React, {useState } from "react";
-import tile from "../../Assets/tile.png";
-import collider from "../../Assets/colider.png";
-import playerImg from "../../Assets/playerImg.png";
-import enemy0 from "../../Assets/enemy0.png";
-import enemy1 from "../../Assets/enemy1.png";
-import enemy2 from "../../Assets//enemy2.png";
-import { TOGGLES } from "../Utils/constants";
+import tile from "../../../Assets/tile.png";
+import collider from "../../../Assets/colider.png";
+import playerImg from "../../../Assets/playerImg.png";
+import enemy0 from "../../../Assets/enemy0.png";
+import enemy1 from "../../../Assets/enemy1.png";
+import enemy2 from "../../../Assets//enemy2.png";
+import { TOGGLES } from "../../../Utils/constants";
 import { Box } from "@mui/material";
-import { LevelType } from "../../Types/Types";
+import { LevelType } from "../../../Types/Types";
 
 type Props = {
   rowIndex: number;
