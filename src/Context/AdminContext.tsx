@@ -16,14 +16,18 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
 
   const login = async (details: AdminDetailsType) => {
-    let uid;
+    let res;
     try {
-      uid = await signIn(details);
-      setToken(uid);
-      sessionStorage.setItem("tlf@id", uid);
+      res = await signIn(details);
+      if(res === 500 || res === 429){
+        return res
+      }
+      setToken(res);
+      sessionStorage.setItem("tlf@id", res);
       navigate("/Dashboard");
       return true
     } catch (err) {
+      console.log(err)
       return false
     }
   };

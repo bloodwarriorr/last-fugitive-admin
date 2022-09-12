@@ -1,11 +1,4 @@
-import {
-  Grid,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  Divider,
-} from "@mui/material";
+import { Grid, Paper, TextField, Button, Typography, Divider } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,7 +11,7 @@ type Props = {};
 
 const Login: React.FC<Props> = () => {
   const auth = useAuth();
-  const navigate = useNavigate();
+
   const [isLoader, setIsLoader] = useState(false);
   const [alertSettings, setAlertSettings] = useState<AlertType>({
     isOpen: false,
@@ -34,20 +27,32 @@ const Login: React.FC<Props> = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoader(true);
-    const res = await auth?.login(loginDetails);
-    if (!res) {
-      setAlertSettings({ ...alertSettings, isOpen: true });
+    try {
+      const res = await auth?.login(loginDetails);
+      if (!res || res === 500) {
+        setAlertSettings({ ...alertSettings, message: "Wrong Email Or Password", isOpen: true });
+      }
+      if (res! === 429) {
+        setAlertSettings({
+          ...alertSettings,
+          message: "Too Many Request Wait 5 Mintues",
+          isOpen: true,
+        });
+      }
+    } catch (err) {
+      setAlertSettings({ ...alertSettings, message: "Network Error", isOpen: true });
+    } finally {
+      setIsLoader(false);
     }
-    setIsLoader(false);
+    // if (!res) {
+    //   setAlertSettings({ ...alertSettings,message:res!, isOpen: true });
+    // }
   };
 
   return (
     <>
       <Loader isLoader={isLoader} />
-      <Alerts
-        settings={alertSettings}
-        setSettings={(val) => setAlertSettings(val)}
-      />
+      <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
       <Grid
         container
         spacing={2}
@@ -67,9 +72,7 @@ const Login: React.FC<Props> = () => {
                   label="Email"
                   variant="outlined"
                   error={!!!loginDetails.email}
-                  onChange={(e) =>
-                    setLoginDetails({ ...loginDetails, email: e.target.value })
-                  }
+                  onChange={(e) => setLoginDetails({ ...loginDetails, email: e.target.value })}
                 />
                 <TextField
                   label="Password"
@@ -86,9 +89,7 @@ const Login: React.FC<Props> = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={
-                    !loginDetails.email.trim() || !loginDetails.password.trim()
-                  }
+                  disabled={!loginDetails.email.trim() || !loginDetails.password.trim()}
                   onClick={handleSubmit}
                 >
                   Submit

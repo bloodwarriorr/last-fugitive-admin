@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import { Box, Button, Divider, Paper, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LevelSelect from "./Components/LevelSelect";
 import { getAllLevels, InsertLevel } from "../../Database/database";
@@ -32,11 +32,13 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
   const [toggles, setToggles] = useState([false, false, false, false, false]);
   useEffect(() => {
     const getLevels = async () => {
+      setIsLoader(true);
       const levels = await getAllLevels(auth?.token!);
       setAllLevels(levels);
       let newLevelCode = levels.length + 1;
       setLevelCode(newLevelCode);
       setLevelObject({ ...levelObject, code: newLevelCode });
+      setIsLoader(false);
     };
     getLevels();
   }, []);
@@ -175,6 +177,7 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
                   <Typography variant="subtitle2">Level Code</Typography>
                   <Typography variant="h6">{levelCode}</Typography>
                 </Box>
+
                 <LevelSelect
                   name={"Rows"}
                   value={levelSize.y}
@@ -250,11 +253,13 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
                 flexWrap={"wrap"}
                 justifyContent={"space-around"}
               >
-                <PositionButton
-                  label="Player"
-                  isPressed={toggles[TOGGLES.PLAYER]}
-                  setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
-                />
+              
+                  <PositionButton
+                    label="Player"
+                    isPressed={toggles[TOGGLES.PLAYER]}
+                    setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
+                  />
+                
                 <PositionButton
                   label="Exit"
                   isPressed={toggles[TOGGLES.EXIT]}
