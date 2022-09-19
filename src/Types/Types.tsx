@@ -1,19 +1,23 @@
-
 import React from "react";
 
 export interface AlertType {
   isOpen: boolean;
   type: "error" | "success";
-  message:string
+  message: string;
 }
-export interface LifeObjType{
-  amount:number;
-  dueTo:Date;
-  
+export interface LifeObjType {
+  amount: number | null
+  dueTo: Date | null | undefined;
 }
-export interface LifeType{
-  user:LifeObjType;
-  guest:LifeObjType;
+export interface LifeType {
+  user: LifeObjType;
+  guest: LifeObjType;
+}
+export interface LifeFullType {
+  addedLifeForGuest: LifeObjType;
+  addedLifeForRegister: LifeObjType;
+  guestUserLife: number;
+  registeredUserLife: number;
 }
 export interface AdminDetailsType {
   email: string;
@@ -81,3 +85,29 @@ export const emptyLevel = {
   difficulty: 1,
   end_point: [2, 7],
 };
+
+export interface LevelRankType {
+  level_code: number;
+  rank: number;
+  popularity?: number;
+}
+export interface PlayDatesType {
+  start_date: Date | null;
+  end_date: Date | null;
+}
+export interface UserType {
+  _id: string;
+  nickname: string;
+  email: string;
+  password: string;
+  current_level: number;
+  level_rank: LevelRankType[];
+  avatarCode: number;
+  avatarUrl: string;
+  gender: number;
+  is_notification: boolean;
+  time_of_register: Date;
+  play_dates: PlayDatesType[];
+  token: string;
+  isActive: boolean;
+}

@@ -11,8 +11,6 @@ import {
   getPopularLevels,
   getTotalRegistrationByYear,
   getAmountOfUsers,
-  getAllUsers,
-  getLifes,
   getGameTotalPopularAvg,
   getGameTotalPlayTime,
 } from "../../Database/database";
@@ -23,7 +21,7 @@ import LevelRankAvg from "./Components/LevelRankAvg";
 import PopularHours from "./Components/PopularHours";
 import Alerts from "../../Components/Alerts";
 import { AlertType } from "../../Types/Types";
-
+import Users from "../Users/Users";
 type Props = {
   setRefreshKey: () => void;
 };
@@ -31,10 +29,9 @@ type Props = {
 const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   const MIN_YEAR = 2022;
   const auth = useAuth();
-  const [users, setUsers] = useState();
-  const [life, setLife] = useState()
-  const [totalPlayTime, setTotalPlayTime] = useState()
-  const [totalPopularity, setTotalPopularity] = useState()
+
+  const [totalPlayTime, setTotalPlayTime] = useState();
+  const [totalPopularity, setTotalPopularity] = useState();
   const [popularLevel, setPopularLevel] = useState();
   const [totalRegister, setTotalRegister] = useState();
   const [levelRankAvg, setLevelRankAvg] = useState();
@@ -73,26 +70,17 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     const totRegister = await getTotalRegistrationByYear(auth?.token!, year);
     setTotalRegister(totRegister);
   };
-  const getUsers = async () => {
-    const allUsers = await getAllUsers(auth?.token!);
-    setUsers(allUsers);
-  };
-  //1
-  const getLifeDoc=async()=>{
-    const lifeObj=await getLifes(auth?.token!);
-    setLife(lifeObj);
-  }
+
   //2
-  const getTotalPopularity=async()=>{
-    const popularity=await getGameTotalPopularAvg(auth?.token!);
+  const getTotalPopularity = async () => {
+    const popularity = await getGameTotalPopularAvg(auth?.token!);
     setTotalPlayTime(popularity);
-  }
+  };
   //3
-  const getTotalPlayTime=async()=>{
-    const totalPlayTime=await getGameTotalPlayTime(auth?.token!);
+  const getTotalPlayTime = async () => {
+    const totalPlayTime = await getGameTotalPlayTime(auth?.token!);
     setTotalPopularity(totalPlayTime);
-  }
- 
+  };
 
   const handleYearChange = (year: number) => {
     setYearSelect(year);
@@ -106,32 +94,24 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     getPopHours();
     getLevelAvg();
     getAnnualRegistration(currentYear);
-    getUsers();
-    getLifeDoc();
     getTotalPopularity();
     getTotalPlayTime();
   }, []);
 
   return (
     <Container maxWidth={"xl"}>
-      <Alerts
-        settings={alertSettings}
-        setSettings={(val) => setAlertSettings(val)}
-      />
+      <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
       <Grid container spacing={5} justifyContent={"space-around"}>
-        <Grid item xs={10} md={4}>
+        <Grid item xs={10} md={3}>
           <Paper elevation={5}>
             <Box sx={{}} p={3} alignItems={"center"}>
               {amountOfGuests ? (
-                <Typography
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  variant={"h5"}
-                >
-                  <span>Registered Users</span>
-                  <span>{amountOfUsers}</span>
-                </Typography>
+                <Box textAlign="center">
+                  <Typography variant={"h5"}>Registered Users</Typography>
+                  <Typography color="green" variant={"h4"}>
+                    {amountOfUsers}
+                  </Typography>
+                </Box>
               ) : (
                 <Skeleton height={32} animation={"wave"} />
               )}
@@ -139,19 +119,52 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
           </Paper>
         </Grid>
 
-        <Grid item xs={10} md={4}>
+        <Grid item xs={10} md={3}>
           <Paper elevation={5}>
             <Box sx={{}} p={3} alignItems={"center"}>
               {amountOfGuests ? (
-                <Typography
-                  display={"flex"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  variant={"h5"}
-                >
-                  <span>Guests Users</span>
-                  <span>{amountOfGuests}</span>
-                </Typography>
+                <Box textAlign={"center"}>
+                  <Typography justifyContent={"space-between"} alignItems={"center"} variant={"h5"}>
+                    Guests Users
+                  </Typography>
+                  <Typography color="green" variant={"h4"}>
+                    {amountOfGuests}
+                  </Typography>
+                </Box>
+              ) : (
+                <Skeleton height={32} animation={"wave"} />
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={10} md={3}>
+          <Paper elevation={5}>
+            <Box sx={{}} p={3} alignItems={"center"}>
+              {totalPlayTime ? (
+                <Box textAlign={"center"}>
+                  <Typography variant={"h5"}>Total Game Time</Typography>
+                  <Typography color={totalPlayTime >= 3 ? "green" : "red"} variant={"h4"}>
+                    {totalPlayTime}
+                  </Typography>
+                </Box>
+              ) : (
+                <Skeleton height={32} animation={"wave"} />
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={10} md={3}>
+          <Paper elevation={5}>
+            <Box sx={{}} p={3} alignItems={"center"}>
+              {totalPopularity ? (
+                <Box textAlign={"center"}>
+                  <Typography variant={"h5"}>Game Popularity</Typography>
+                  <Typography color={"green"} variant={"h4"}>
+                    {totalPopularity}
+                  </Typography>
+                </Box>
               ) : (
                 <Skeleton height={32} animation={"wave"} />
               )}
@@ -203,6 +216,11 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
         </Grid>
       </Grid>
 
+      <br />
+      <br />
+      <br />
+
+      <Users/>
       <SpeedDail refreshData={setRefreshKey} />
     </Container>
   );
