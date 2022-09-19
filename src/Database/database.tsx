@@ -35,7 +35,6 @@ export const getPopularLevels = async (uid: string) => {
     throw new Error("Network Error!");
   }
 };
-
 export const getTotalRegistrationByYear = async (uid: string, year: number) => {
   const requestOptions = {
     method: "get",
