@@ -11,6 +11,10 @@ import {
   getPopularLevels,
   getTotalRegistrationByYear,
   getAmountOfUsers,
+  getAllUsers,
+  getLifes,
+  getGameTotalPopularAvg,
+  getGameTotalPlayTime,
 } from "../../Database/database";
 import { useAuth } from "../../Context/AdminContext";
 import AnnualRegistration from "./Components/AnnualRegistration";
@@ -27,6 +31,10 @@ type Props = {
 const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   const MIN_YEAR = 2022;
   const auth = useAuth();
+  const [users, setUsers] = useState();
+  const [life, setLife] = useState()
+  const [totalPlayTime, setTotalPlayTime] = useState()
+  const [totalPopularity, setTotalPopularity] = useState()
   const [popularLevel, setPopularLevel] = useState();
   const [totalRegister, setTotalRegister] = useState();
   const [levelRankAvg, setLevelRankAvg] = useState();
@@ -61,15 +69,36 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     const levelAvg = await getLevelRankAvg(auth?.token!);
     setLevelRankAvg(levelAvg);
   };
-  const getAnnualRegistration = async (year:number) => {
+  const getAnnualRegistration = async (year: number) => {
     const totRegister = await getTotalRegistrationByYear(auth?.token!, year);
     setTotalRegister(totRegister);
   };
-  const handleYearChange = (year:number) => {
-    setYearSelect(year)
-    getAnnualRegistration(year)
+  const getUsers = async () => {
+    const allUsers = await getAllUsers(auth?.token!);
+    setUsers(allUsers);
+  };
+  //1
+  const getLifeDoc=async()=>{
+    const lifeObj=await getLifes(auth?.token!);
+    setLife(lifeObj);
   }
-  
+  //2
+  const getTotalPopularity=async()=>{
+    const popularity=await getGameTotalPopularAvg(auth?.token!);
+    setTotalPlayTime(popularity);
+  }
+  //3
+  const getTotalPlayTime=async()=>{
+    const totalPlayTime=await getGameTotalPlayTime(auth?.token!);
+    setTotalPopularity(totalPlayTime);
+  }
+ 
+
+  const handleYearChange = (year: number) => {
+    setYearSelect(year);
+    getAnnualRegistration(year);
+  };
+
   useEffect(() => {
     getRegisterUsers();
     getGuestsUser();
@@ -77,12 +106,18 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     getPopHours();
     getLevelAvg();
     getAnnualRegistration(currentYear);
+    getUsers();
+    getLifeDoc();
+    getTotalPopularity();
+    getTotalPlayTime();
   }, []);
-
 
   return (
     <Container maxWidth={"xl"}>
-      <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
+      <Alerts
+        settings={alertSettings}
+        setSettings={(val) => setAlertSettings(val)}
+      />
       <Grid container spacing={5} justifyContent={"space-around"}>
         <Grid item xs={10} md={4}>
           <Paper elevation={5}>
@@ -152,9 +187,8 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
                 minYear={MIN_YEAR}
                 currentYear={currentYear}
                 yearSelect={yearSelect}
-                setTotalRegister = {()=>setTotalRegister(undefined)}
-                handleYearChange={(year:number) => handleYearChange(year)}
-                
+                setTotalRegister={() => setTotalRegister(undefined)}
+                handleYearChange={(year: number) => handleYearChange(year)}
               />
             </Box>
           </Paper>

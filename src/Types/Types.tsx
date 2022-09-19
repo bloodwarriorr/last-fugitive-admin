@@ -6,7 +6,15 @@ export interface AlertType {
   type: "error" | "success";
   message:string
 }
-
+export interface LifeObjType{
+  amount:number;
+  dueTo:Date;
+  
+}
+export interface LifeType{
+  user:LifeObjType;
+  guest:LifeObjType;
+}
 export interface AdminDetailsType {
   email: string;
   password: string;
