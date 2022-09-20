@@ -4,7 +4,6 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./Context/AdminContext";
 import RequireAuth from "./Utils/RequireAuth";
-import Navbar from "./Components/NavBar";
 import Levels from "./Pages/Levels/Levels";
 import Footer from "./Components/Footer";
 import InvalidPage from "./Utils/InvalidPage";

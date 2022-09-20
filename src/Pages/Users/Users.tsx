@@ -1,10 +1,9 @@
 import { Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Alerts from "../../Components/Alerts";
-import Loader from "../../Components/Loader";
 import { useAuth } from "../../Context/AdminContext";
 import { getAllUsers, getLifes } from "../../Database/database";
-import { AlertType, LifeType, UserType } from "../../Types/Types";
+import { AlertType } from "../../Types/Types";
 import AddLifes from "./Components/AddLifes";
 import UsersTable from "./Components/UsersTable";
 
