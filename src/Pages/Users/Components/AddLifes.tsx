@@ -59,7 +59,7 @@ const AddLifes: React.FC<Props> = ({ lifes }) => {
           <Grid item xs={10} md={5}>
             <Typography variant="subtitle2">Registered Users</Typography>
             <Divider />
-            <Box display={flex} justifyContent={"center"}>
+            <Box display={'flex'} justifyContent={"center"}>
               <Typography variant="subtitle1">
                 Default Amount : {lifes.registeredUserLife}
               </Typography>
