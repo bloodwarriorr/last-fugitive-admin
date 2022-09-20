@@ -2,7 +2,7 @@ body {
   width: 100%;
   min-height: 100vh;
   margin: 0;
-  background-color: #e7e7e7;
+  background-color: #1E2F45 !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

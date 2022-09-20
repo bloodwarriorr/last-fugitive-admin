@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Container, Divider, Skeleton, Typography } from "@mui/material";
+import { Container, Divider, Skeleton, Typography, useTheme } from "@mui/material";
 import PopularLevelsChart from "./Components/PopularLevelsChart";
 import {
   getAmountOfGuests,
@@ -97,7 +97,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     getTotalPopularity();
     getTotalPlayTime();
   }, []);
-
+  const theme = useTheme()
   return (
     <Container maxWidth={"xl"}>
       <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
@@ -108,12 +108,12 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
               {amountOfGuests ? (
                 <Box textAlign="center">
                   <Typography variant={"h5"}>Registered Users</Typography>
-                  <Typography color="green" variant={"h4"}>
+                  <Typography color={theme.palette.primary.main} variant={"h4"}>
                     {amountOfUsers}
                   </Typography>
                 </Box>
               ) : (
-                <Skeleton height={32} animation={"wave"} />
+                <Skeleton height={73} animation={"wave"} />
               )}
             </Box>
           </Paper>
@@ -127,12 +127,12 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
                   <Typography justifyContent={"space-between"} alignItems={"center"} variant={"h5"}>
                     Guests Users
                   </Typography>
-                  <Typography color="green" variant={"h4"}>
+                  <Typography color={theme.palette.primary.main} variant={"h4"}>
                     {amountOfGuests}
                   </Typography>
                 </Box>
               ) : (
-                <Skeleton height={32} animation={"wave"} />
+                <Skeleton height={73} animation={"wave"} />
               )}
             </Box>
           </Paper>
@@ -144,12 +144,12 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
               {totalPlayTime ? (
                 <Box textAlign={"center"}>
                   <Typography variant={"h5"}>Total Game Time</Typography>
-                  <Typography color={totalPlayTime >= 3 ? "green" : "red"} variant={"h4"}>
+                  <Typography color={totalPlayTime >= 3 ? theme.palette.primary.main : "red"} variant={"h4"}>
                     {totalPlayTime}
                   </Typography>
                 </Box>
               ) : (
-                <Skeleton height={32} animation={"wave"} />
+                <Skeleton height={73} animation={"wave"} />
               )}
             </Box>
           </Paper>
@@ -161,12 +161,12 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
               {totalPopularity ? (
                 <Box textAlign={"center"}>
                   <Typography variant={"h5"}>Game Popularity</Typography>
-                  <Typography color={"green"} variant={"h4"}>
+                  <Typography color={theme.palette.primary.main} variant={"h4"}>
                     {totalPopularity}
                   </Typography>
                 </Box>
               ) : (
-                <Skeleton height={32} animation={"wave"} />
+                <Skeleton height={73} animation={"wave"} />
               )}
             </Box>
           </Paper>
@@ -179,14 +179,14 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
       <Grid container spacing={15} justifyContent={"space-around"}>
         <Grid item xs={12} md={6}>
           <Paper elevation={5}>
-            <Box sx={{}} p={"24px 15px"} height={380}>
+            <Box sx={{}} p={"24px 15px"} height={440}>
               <PopularHours data={popularHours!} />
             </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={5}>
-            <Box p={"24px 15px"} height={380}>
+            <Box p={"24px 15px"} height={440}>
               <LevelRankAvg data={levelRankAvg!} />
             </Box>
           </Paper>
@@ -194,7 +194,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
 
         <Grid item xs={12} md={6}>
           <Paper elevation={5}>
-            <Box sx={{}} p={"24px 15px"} height={380}>
+            <Box sx={{}} p={"24px 15px"} height={440}>
               <AnnualRegistration
                 data={totalRegister!}
                 minYear={MIN_YEAR}
@@ -209,18 +209,13 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
 
         <Grid item xs={12} md={6}>
           <Paper elevation={5}>
-            <Box p={"24px 15px"} height={380}>
+            <Box p={"24px 15px"} height={440}>
               <PopularLevelsChart data={popularLevel!} />
             </Box>
           </Paper>
         </Grid>
       </Grid>
 
-      <br />
-      <br />
-      <br />
-
-      <Users/>
       <SpeedDail refreshData={setRefreshKey} />
     </Container>
   );

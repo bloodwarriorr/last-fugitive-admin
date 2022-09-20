@@ -1,3 +1,4 @@
+import { Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Context/AdminContext";
 import { getAllUsers, getLifes } from "../../Database/database";
@@ -27,9 +28,13 @@ const Users: React.FC<Props> = () => {
   };
   return (
     <div>
-      {users && <UsersTable users={users} setUsers={(val:any) => setUsers(val)} />}
+      {users ? (
+        <UsersTable users={users} setUsers={(val: any) => setUsers(val)} />
+      ) : (
+        <Skeleton height={300} animation={"wave"} />
+      )}
       <br />
-      {lifes && <AddLifes lifes={lifes} />}
+      {lifes ? <AddLifes lifes={lifes} /> :  <Skeleton height={255} animation={"wave"} />}
     </div>
   );
 };

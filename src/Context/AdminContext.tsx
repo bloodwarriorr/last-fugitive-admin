@@ -10,25 +10,23 @@ type Props = {
 };
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(
-    sessionStorage.getItem("tlf@id")
-  );
+  const [token, setToken] = useState<string | null>(sessionStorage.getItem("tlf@id"));
   const navigate = useNavigate();
 
   const login = async (details: AdminDetailsType) => {
     let res;
     try {
       res = await signIn(details);
-      if(res === 500 || res === 429){
-        return res
+      if (res === 500 || res === 429) {
+        return res;
       }
       setToken(res);
       sessionStorage.setItem("tlf@id", res);
-      navigate("/Dashboard");
-      return true
+      navigate("/home");
+      return true;
     } catch (err) {
-      console.log(err)
-      return false
+      console.log(err);
+      return false;
     }
   };
 

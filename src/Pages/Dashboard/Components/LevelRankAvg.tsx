@@ -1,4 +1,4 @@
-import { Box, Divider, Skeleton, Typography } from "@mui/material";
+import { Box, Divider, Skeleton, Typography, useTheme } from "@mui/material";
 import {
   BarChart,
   Bar,
@@ -7,14 +7,19 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Label,
 } from "recharts";
-
 
 type Props = {
   data: { _id: number; Value: number }[];
 };
 
 const LevelRankAvg: React.FC<Props> = ({ data }) => {
+  const theme = useTheme();
+  const textColor = theme.palette.text.primary;
+  const primary = theme.palette.primary.main;
+  const light = theme.palette.primary.light;
+  const secondary = theme.palette.secondary.main;
   return (
     <>
       <Typography variant="h6">Average Level Ranking</Typography>
@@ -29,9 +34,9 @@ const LevelRankAvg: React.FC<Props> = ({ data }) => {
             data={data}
             margin={{
               top: 0,
-              right: 30,
-              left: 0,
-              bottom: 0,
+              right: 15,
+              left: 15,
+              bottom: 15,
             }}
             barSize={20}
           >
@@ -39,24 +44,40 @@ const LevelRankAvg: React.FC<Props> = ({ data }) => {
               dataKey={"_id"}
               scale="point"
               padding={{ left: 10, right: 10 }}
-            />
-            <YAxis />
-            <Tooltip />
-            {/* <Legend /> */}
-            <CartesianGrid strokeDasharray="3 3" />
+              tick={{ fill: textColor }}
+            >
+              <Label
+                fontSize={18}
+                value="Levels →"
+                offset={-15}
+                position="insideBottom"
+                fill={primary}
+                style={{ textAnchor: "middle" }}
+              />
+            </XAxis>
+            <YAxis tick={{ fill: textColor }}>
+              <Label
+                value="Rank →"
+                fontSize={18}
+                offset={-5}
+                position="insideLeft"
+                angle={-90}
+                fill={primary}
+                style={{ textAnchor: "middle" }}
+              />
+            </YAxis>
+            <Tooltip contentStyle={{ backgroundColor: secondary }} />
+            <CartesianGrid strokeDasharray="3 5" />
             <Bar
               name="Average Rank"
               dataKey="Value"
-              fill="#8884d8"
-              background={{ fill: "#eee" }}
+              stroke={light}
+              fill={primary}
+              // background={{ fill: theme.palette.secondary.light }}
             />
           </BarChart>
         ) : (
-          <Skeleton
-            animation={"wave"}
-            height={300}
-            sx={{ transform: "none" }}
-          />
+          <Skeleton animation={"wave"} height={300} sx={{ transform: "none" }} />
         )}
       </ResponsiveContainer>
     </>

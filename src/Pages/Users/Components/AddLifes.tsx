@@ -54,10 +54,12 @@ const AddLifes: React.FC<Props> = ({ lifes }) => {
       <Box padding={2}>
         <Typography variant="h6">Add Lifes To Users</Typography>
         <Divider flexItem />
-        <Grid container p={3}>
+
+        <Grid container p={3} width={"100%"} justifyContent={"space-around"}>
           <Grid item xs={10} md={5}>
             <Typography variant="subtitle2">Registered Users</Typography>
-            <Box>
+            <Divider />
+            <Box display={flex} justifyContent={"center"}>
               <Typography variant="subtitle1">
                 Default Amount : {lifes.registeredUserLife}
               </Typography>
@@ -91,8 +93,10 @@ const AddLifes: React.FC<Props> = ({ lifes }) => {
               </LocalizationProvider>
             </Box>
           </Grid>
+
           <Grid item xs={10} md={5}>
             <Typography variant="subtitle2">Guests Users</Typography>
+            <Divider />
             <Box>
               <Typography variant="subtitle1">Default Amount : {lifes.guestUserLife}</Typography>
               <FormControl>

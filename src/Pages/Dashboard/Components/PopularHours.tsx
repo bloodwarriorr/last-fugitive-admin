@@ -1,4 +1,5 @@
-import { Box, Divider, Skeleton, Typography } from "@mui/material";
+import { Box, Divider, Skeleton, Typography, useTheme } from "@mui/material";
+import { color } from "@mui/system";
 import React from "react";
 import {
   AreaChart,
@@ -8,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Label,
 } from "recharts";
 
 type Props = {
@@ -15,7 +17,11 @@ type Props = {
 };
 
 const PopularHours: React.FC<Props> = ({ data }) => {
-
+  const theme = useTheme();
+  const textColor = theme.palette.text.primary;
+  const primary = theme.palette.primary.main;
+  const light = theme.palette.primary.light;
+  const secondary = theme.palette.secondary.main;
   return (
     <>
       <Typography variant="h6">Popular Playing Hours</Typography>
@@ -30,29 +36,50 @@ const PopularHours: React.FC<Props> = ({ data }) => {
             data={data}
             margin={{
               top: 0,
-              right: 30,
-              left: 0,
-              bottom: 0,
+              right: 15,
+              left: 15,
+              bottom: 15,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="_id" />
-            <YAxis />
-            <Tooltip />
+            <XAxis dataKey="_id" tick={{ fill: textColor }} tickFormatter={(t) => `${t}`}>
+              <Label
+                value="Hours Of The Day →"
+                offset={-15}
+                fontSize={18}
+                position="insideBottom"
+                fill={primary}
+                style={{ textAnchor: "middle" }}
+              />
+            </XAxis>
+            <YAxis tick={{ fill: textColor }}>
+              <Label
+                value="Minutes →"
+                fontSize={18}
+                offset={-10}
+                position="insideLeft"
+                angle={-90}
+                fill={primary}
+                style={{ textAnchor: "middle" }}
+              />
+            </YAxis>
+
+            <Tooltip
+              contentStyle={{
+                backgroundColor: secondary,
+              }}
+            />
             <Area
               name="Playing Time"
               type="monotone"
               dataKey="Minute"
-              stroke="#8884d8"
-              fill="#8884d8"
+              stroke={light}
+              fill={primary}
             />
+            <Label value={"Minutes"} position={"insideLeft"} angle={-90} />
           </AreaChart>
         ) : (
-          <Skeleton
-            animation={"wave"}
-            height={300}
-            sx={{ transform: "none" }}
-          />
+          <Skeleton animation={"wave"} height={300} sx={{ transform: "none" }} />
         )}
       </ResponsiveContainer>
     </>
