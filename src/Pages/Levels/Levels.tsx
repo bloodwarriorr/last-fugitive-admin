@@ -137,7 +137,9 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
         type: "success",
         message: "Level added successfully!",
       });
-      setRefreshKey();
+      setTimeout(() => {
+        setRefreshKey();
+      }, 2000);
     } else {
       setAlertSettings({
         isOpen: true,
@@ -253,13 +255,12 @@ const Levels: React.FC<Props> = ({ setRefreshKey }) => {
                 flexWrap={"wrap"}
                 justifyContent={"space-around"}
               >
-              
-                  <PositionButton
-                    label="Player"
-                    isPressed={toggles[TOGGLES.PLAYER]}
-                    setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
-                  />
-                
+                <PositionButton
+                  label="Player"
+                  isPressed={toggles[TOGGLES.PLAYER]}
+                  setIsPressed={() => handleToggles(TOGGLES.PLAYER)}
+                />
+
                 <PositionButton
                   label="Exit"
                   isPressed={toggles[TOGGLES.EXIT]}
