@@ -74,12 +74,12 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
   //2
   const getTotalPopularity = async () => {
     const popularity = await getGameTotalPopularAvg(auth?.token!);
-    setTotalPlayTime(popularity);
+    setTotalPopularity(popularity);
   };
   //3
   const getTotalPlayTime = async () => {
     const totalPlayTime = await getGameTotalPlayTime(auth?.token!);
-    setTotalPopularity(totalPlayTime);
+    setTotalPlayTime(totalPlayTime);
   };
 
   const handleYearChange = (year: number) => {
@@ -97,7 +97,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
     getTotalPopularity();
     getTotalPlayTime();
   }, []);
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <Container maxWidth={"xl"}>
       <Alerts settings={alertSettings} setSettings={(val) => setAlertSettings(val)} />
@@ -144,7 +144,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
               {totalPlayTime ? (
                 <Box textAlign={"center"}>
                   <Typography variant={"h5"}>Total Game Time</Typography>
-                  <Typography color={totalPlayTime >= 3 ? theme.palette.primary.main : "red"} variant={"h4"}>
+                  <Typography color={theme.palette.primary.main} variant={"h4"}>
                     {totalPlayTime}
                   </Typography>
                 </Box>
