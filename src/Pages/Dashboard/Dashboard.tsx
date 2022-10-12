@@ -142,11 +142,21 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
           <Paper elevation={5}>
             <Box sx={{}} p={3} alignItems={"center"}>
               {totalPlayTime ? (
-                <Box textAlign={"center"}>
+                <Box
+                  textAlign={"center"}
+                  display="flex"
+                  alignItems={"center"}
+                  flexDirection={"column"}
+                >
                   <Typography variant={"h5"}>Total Game Time</Typography>
-                  <Typography color={theme.palette.primary.main} variant={"h4"}>
-                    {totalPlayTime}
-                  </Typography>
+                  <Box display={"flex"} width="50%" justifyContent="space-around" alignItems={'flex-end'}>
+                    <Typography color={theme.palette.primary.main} variant={"h4"}>
+                      {totalPlayTime}
+                    </Typography>
+                    <Typography color={theme.palette.primary.main} variant={"h6"}>
+                      min
+                    </Typography>
+                  </Box>
                 </Box>
               ) : (
                 <Skeleton height={73} animation={"wave"} />
@@ -162,7 +172,7 @@ const Dashboard: React.FC<Props> = ({ setRefreshKey }) => {
                 <Box textAlign={"center"}>
                   <Typography variant={"h5"}>Game Popularity</Typography>
                   <Typography color={theme.palette.primary.main} variant={"h4"}>
-                    {totalPopularity}
+                    {totalPopularity} / 5
                   </Typography>
                 </Box>
               ) : (
